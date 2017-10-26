@@ -4,13 +4,13 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Peer1 {
+public class Peer5 {
     private static int sPort = 8000;   //The server will be listening on this port number
-    private static int numOfClients = 0;
-    private static String peerID = "Peer1";   //The server will be listening on this port number
-    private static String secretMessage = "hi";
+    private static int numOfClients = 4;
+    private static String peerID = "Peer5";   //The server will be listening on this port number
+    private static String secretMessage = "salutations";
 
-    public static void main(String [] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         int cPort = sPort;
         System.out.println(peerID + " is running!");
         sPort += numOfClients;

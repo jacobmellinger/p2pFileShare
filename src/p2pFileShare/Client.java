@@ -46,6 +46,7 @@ public class Client {
 		}
 		catch (ConnectException e) {
 			System.err.println("[Client] Connection refused. You need to initiate a server first.");
+			//todo Take the timeout [sleep] out
 			try {
 				TimeUnit.SECONDS.sleep(5);
 			} catch (InterruptedException e1) {

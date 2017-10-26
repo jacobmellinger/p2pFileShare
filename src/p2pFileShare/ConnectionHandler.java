@@ -5,12 +5,15 @@ import java.net.Socket;
 
 public class ConnectionHandler extends Thread{
     private String myPeerID;
-    private String peerID;
+    private String peerID = "-1";
     private String message;    //message received from the client
     private String MESSAGE;    //uppercase message send to the client
     private Socket connection;
     private ObjectInputStream in;	//stream read from the socket
     private ObjectOutputStream out;    //stream write to the socket
+
+    //todo remove
+    private int secretMsgCounter = 1;
 
     private String secretMessage;
 
@@ -34,15 +37,17 @@ public class ConnectionHandler extends Thread{
             out.flush();
             in = new ObjectInputStream(connection.getInputStream());
             try{
-                while(true)
+                establishConnection(myPeerID);
+                while(secretMsgCounter <= 10)
                 {
-                    message = (String)in.readObject();
-                    System.out.println("[" + myPeerID + "] Receive message: " + message + " from Peer " + peerID);
-
                     //Send secret message
-                    MESSAGE = secretMessage.toUpperCase();
+                    MESSAGE = secretMessage + " ~" + secretMsgCounter + "~";
                     sendMessage(MESSAGE);
+                    secretMsgCounter++;
 
+                    message = (String)in.readObject();
+                    message = message.toUpperCase();
+                    System.out.println("[" + myPeerID + "] Receive message: " + message + " from " + peerID);
                 }
             }
             catch(ClassNotFoundException classnot){
@@ -50,7 +55,7 @@ public class ConnectionHandler extends Thread{
             }
         }
         catch(IOException ioException){
-            System.out.println("[" + myPeerID + "] Disconnect with Peer " + peerID);
+            System.out.println("[" + myPeerID + "] Disconnect with " + peerID);
         }
         finally{
             //Close connections
@@ -60,7 +65,7 @@ public class ConnectionHandler extends Thread{
                 connection.close();
             }
             catch(IOException ioException){
-                System.out.println("[" + myPeerID + "] Disconnect with Peer " + peerID);
+                System.out.println("[" + myPeerID + "] Disconnect with " + peerID);
             }
         }
     }
@@ -71,7 +76,27 @@ public class ConnectionHandler extends Thread{
         try{
             out.writeObject(msg);
             out.flush();
-            System.out.println("[" + myPeerID + "] Send message: " + msg + " to Peer " + peerID);
+            System.out.println("[" + myPeerID + "] Send message: " + msg + " to " + peerID);
+        }
+        catch(IOException ioException){
+            ioException.printStackTrace();
+        }
+    }
+
+    //establish connection
+    public void establishConnection(String msg)
+    {
+        try{
+            System.out.println("[" + myPeerID + "] Creating a connection to new peer...");
+            out.writeObject(msg);
+            out.flush();
+            try {
+                message = (String)in.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            peerID = message;
+            System.out.println("[" + myPeerID + "] Receive message: Made connection to " + peerID);
         }
         catch(IOException ioException){
             ioException.printStackTrace();
