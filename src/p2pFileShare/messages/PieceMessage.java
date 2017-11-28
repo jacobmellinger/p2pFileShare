@@ -1,4 +1,4 @@
-package p2pFileShare.messages;
+package messages;
 
 public class PieceMessage extends Messages{
 
@@ -35,5 +35,11 @@ public class PieceMessage extends Messages{
 	@Override
 	public int getMessageType() {
 		return messageType;
+	}
+
+	@Override
+	public void handleMessage(Messages msg) {
+		PieceMessage message = (PieceMessage) msg;
+
 	}
 }

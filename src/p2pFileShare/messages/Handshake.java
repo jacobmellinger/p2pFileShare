@@ -1,4 +1,4 @@
-package p2pFileShare.messages;
+package messages;
 
 public class Handshake extends Messages{
 	
@@ -21,5 +21,11 @@ public class Handshake extends Messages{
 	@Override
 	public int getMessageType() {
 		return messageType;
+	}
+
+	@Override
+	public void handleMessage(Messages msg) {
+		Handshake message = (Handshake) msg;
+
 	}
 }

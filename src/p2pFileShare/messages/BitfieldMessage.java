@@ -1,4 +1,4 @@
-package p2pFileShare.messages;
+package messages;
 
 public class BitfieldMessage extends Messages{
 
@@ -36,4 +36,9 @@ public class BitfieldMessage extends Messages{
 		return messageType;
 	}
 
+	@Override
+	public void handleMessage(Messages msg) {
+		BitfieldMessage message = (BitfieldMessage) msg;
+
+	}
 }

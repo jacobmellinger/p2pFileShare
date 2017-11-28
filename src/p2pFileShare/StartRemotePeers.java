@@ -25,8 +25,9 @@ public class StartRemotePeers {
 		String st;
 		int i1;
 		peerInfoVector = new Vector<RemotePeerInfo>();
+		String path = System.getProperty("user.dir");
 		try {
-			BufferedReader in = new BufferedReader(new FileReader("PeerInfo.cfg"));
+			BufferedReader in = new BufferedReader(new FileReader(path + "\\" + "PeerInfo.cfg"));
 			while((st = in.readLine()) != null) {
 				
 				 String[] tokens = st.split("\\s+");
@@ -58,7 +59,9 @@ public class StartRemotePeers {
 					
 			// get current path
 			String path = System.getProperty("user.dir");
-			
+
+			String connectionPorts = "";
+
 			// start clients at remote hosts
 			for (int i = 0; i < myStart.peerInfoVector.size(); i++) {
 				RemotePeerInfo pInfo = (RemotePeerInfo) myStart.peerInfoVector.elementAt(i);
@@ -67,8 +70,9 @@ public class StartRemotePeers {
 				
 				// *********************** IMPORTANT *************************** //
 				// If your program is JAVA, use this line.
-				Runtime.getRuntime().exec("ssh " + pInfo.peerAddress + " cd " + path + "; java peerProcess " + pInfo.peerId + " " + pInfo.peerPort + " " + i + " " + myStart.peerInfoVector);
-				
+				//Runtime.getRuntime().exec("ssh " + pInfo.peerAddress + " cd " + path + "; java peerProcess " + pInfo.peerId + " " + pInfo.peerPort + " " + i + " " + myStart.peerInfoVector);
+				Runtime.getRuntime().exec("java peerProcess " + pInfo.peerId );
+
 				// If your program is C/C++, use this line instead of the above line. 
 				//Runtime.getRuntime().exec("ssh " + pInfo.peerAddress + " cd " + path + "; ./peerProcess " + pInfo.peerId);
 			}		

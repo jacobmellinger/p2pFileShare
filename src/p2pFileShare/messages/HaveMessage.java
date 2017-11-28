@@ -1,4 +1,4 @@
-package p2pFileShare.messages;
+package messages;
 
 public class HaveMessage extends Messages{
 
@@ -28,6 +28,12 @@ public class HaveMessage extends Messages{
 	@Override
 	public int getMessageType() {
 		return messageType;
+	}
+
+	@Override
+	public void handleMessage(Messages msg) {
+		HaveMessage message = (HaveMessage) msg;
+
 	}
 
 }

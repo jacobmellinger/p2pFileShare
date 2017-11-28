@@ -1,5 +1,4 @@
-package p2pFileShare.messages;
-
+package messages;
 
 // This message Class encapsulates messages for Choke
 public class ChokeMessage extends Messages{
@@ -23,5 +22,11 @@ public class ChokeMessage extends Messages{
 	@Override
 	public int getMessageType() {
 		return messageType;
+	}
+
+	@Override
+	public void handleMessage(Messages msg) {
+		ChokeMessage message = (ChokeMessage) msg;
+
 	}
 }

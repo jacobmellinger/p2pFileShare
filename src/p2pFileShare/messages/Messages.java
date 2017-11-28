@@ -1,7 +1,10 @@
-package p2pFileShare.messages;
+package messages;
 
-public abstract class Messages {
+import java.io.Serializable;
+
+public abstract class Messages implements Serializable {
 	
 	int messageType;
 	public abstract int getMessageType();
+	public abstract void handleMessage(Messages msg);
 }

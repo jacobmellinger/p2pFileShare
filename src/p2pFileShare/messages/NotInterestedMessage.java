@@ -1,4 +1,4 @@
-package p2pFileShare.messages;
+package messages;
 
 public class NotInterestedMessage extends Messages{
 
@@ -21,6 +21,12 @@ public class NotInterestedMessage extends Messages{
 	@Override
 	public int getMessageType() {
 		return messageType;
+	}
+
+	@Override
+	public void handleMessage(Messages msg) {
+		NotInterestedMessage message = (NotInterestedMessage) msg;
+
 	}
 
 }
