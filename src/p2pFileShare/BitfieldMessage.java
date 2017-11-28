@@ -1,10 +1,11 @@
+import java.util.Vector;
+
 public class BitfieldMessage extends Messages {
 
 	private int messageType;
 	private int messageLength;
-	private int[] messagePayload;
-	
-	
+	private Vector<Integer> messagePayload;
+
 	BitfieldMessage(){
 		messageType = 5;
 	}
@@ -14,17 +15,22 @@ public class BitfieldMessage extends Messages {
 		messageLength = newLength;
 	}
 	
-	BitfieldMessage(int newLength, int[] bitmap) {
+	BitfieldMessage(int newLength, Vector<Integer> bitmap) {
 		messageType = 5;
 		messageLength = newLength;
 		messagePayload = bitmap;
 	}
-	
-	public void setBitField(int[] bitmap) {
+
+	BitfieldMessage(Vector<Integer> bitmap) {
+		messageType = 5;
 		messagePayload = bitmap;
 	}
 	
-	public int[] getBitField() {
+	public void setBitField(Vector<Integer> bitmap) {
+		messagePayload = bitmap;
+	}
+	
+	public Vector<Integer>getBitField() {
 		return messagePayload;
 	}
 	
@@ -35,7 +41,7 @@ public class BitfieldMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg) {
+	public void handleMessage(Messages msg, peerProcess myPeer) {
 		BitfieldMessage message = (BitfieldMessage) msg;
 
 	}

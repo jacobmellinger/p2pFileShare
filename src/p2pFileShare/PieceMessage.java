@@ -36,7 +36,7 @@ public class PieceMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg) {
+	public void handleMessage(Messages msg, peerProcess myPeer) {
 		PieceMessage message = (PieceMessage) msg;
 
 	}

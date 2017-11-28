@@ -22,7 +22,7 @@ public class Handshake extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg) {
+	public void handleMessage(Messages msg, peerProcess myPeer) {
 		Handshake message = (Handshake) msg;
 
 	}

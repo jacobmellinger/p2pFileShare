@@ -22,7 +22,7 @@ public class InterestedMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg) {
+	public void handleMessage(Messages msg, peerProcess myPeer) {
 		InterestedMessage message = (InterestedMessage) msg;
 
 	}

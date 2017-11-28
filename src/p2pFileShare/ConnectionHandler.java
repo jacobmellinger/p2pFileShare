@@ -36,31 +36,32 @@ public class ConnectionHandler extends Thread{
             writer.close();
 
 
-//            try{
-//                while(/*!everyoneHasEverything*/ true) {
-//                    //Sending each other their respective PeerID to identify each other
-//                    //establishConnection(myPeerID);
-//
-//                    //Send Message
-//                    if(this.theirPeerID == null){
-////                        Message outgoingMessage = createMessage
-//                    }
-//                    //Message outgoingMessage = createMessage(myPeerID, -1;
-//                    //Message outgoingMessage = createMessage(myPeerID, Integer.parseInt(theirPeerID), myPeer);
-//                    //sendMessage(outgoingMessage);
-//
-//                    //incomingMessage = (Messages)in.readObject();
-//                    //incomingMessage.handleMessage(incomingMessage, myPeer);
-//                    //writer.println("[" + myPeerID + "] Receive incomingMessage: " + incomingMessage + " from " + theirPeerID);
-//
-//                }
-//            }
-//            catch(ClassNotFoundException classnot){
-//                System.err.println("[" + myPeerID + "] Data received in unknown format");
-//            }
+            try{
+                while(/*!everyoneHasEverything*/ true) {
+                    //Sending each other their respective PeerID to identify each other
+                    //establishConnection(myPeerID);
+
+                    //Send Message
+                    if(this.theirPeerID == null){
+                        outgoingMessage = outgoingMessage.createMessage(myPeerID, -1, myPeer);
+                    } else{
+                        outgoingMessage = outgoingMessage.createMessage(myPeerID, Integer.parseInt(theirPeerID), myPeer);
+                    }
+
+                    sendMessage(outgoingMessage);
+
+                    incomingMessage = (Messages)in.readObject();
+                    incomingMessage.handleMessage(incomingMessage, myPeer);
+                    //writer.println("[" + myPeerID + "] Receive incomingMessage: " + incomingMessage + " from " + theirPeerID);
+
+                }
+            }
+            catch(ClassNotFoundException classnot){
+                System.err.println("[" + myPeerID + "] Data received in unknown format");
+            }
         }
         catch(IOException ioException){
-            writer.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
+            System.out.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
         }
         finally{
             //Close connections
@@ -70,18 +71,18 @@ public class ConnectionHandler extends Thread{
                 connection.close();
             }
             catch(IOException ioException){
-                writer.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
+                System.out.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
             }
         }
     }
 
     //send a incomingMessage to the output stream
-    public void sendMessage(String msg)
+    public void sendMessage(Messages msg)
     {
         try{
             out.writeObject(msg);
             out.flush();
-            writer.println("[" + myPeerID + "] Send incomingMessage: " + msg + " to " + theirPeerID);
+            System.out.println("[" + myPeerID + "] Send incomingMessage: " + msg + " to " + theirPeerID);
         }
         catch(IOException ioException){
             ioException.printStackTrace();

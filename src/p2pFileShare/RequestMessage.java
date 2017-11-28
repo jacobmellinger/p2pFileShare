@@ -33,7 +33,7 @@ public class RequestMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg) {
+	public void handleMessage(Messages msg, peerProcess myPeer) {
 		RequestMessage message = (RequestMessage) msg;
 
 	}

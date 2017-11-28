@@ -23,7 +23,7 @@ public class ChokeMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg) {
+	public void handleMessage(Messages msg, peerProcess myPeer) {
 		ChokeMessage message = (ChokeMessage) msg;
 
 	}

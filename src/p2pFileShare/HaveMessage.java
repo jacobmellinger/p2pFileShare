@@ -29,7 +29,7 @@ public class HaveMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg) {
+	public void handleMessage(Messages msg, peerProcess myPeer) {
 		HaveMessage message = (HaveMessage) msg;
 
 	}
