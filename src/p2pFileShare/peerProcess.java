@@ -110,6 +110,12 @@ public class peerProcess {
             cPort = Integer.toString(myPeerProcess.peerInfoVector.get(i).peerPort);
             startClient(Integer.toString(myPeerProcess.myPeerID), Integer.parseInt(cPort), myPeerProcess);
         }
+
+        // Up to here, the peer has all the config info and has started
+        // clients to connect to all peers started before it
+
+
+
     }
 
     public static void startServer(String peerID, int sPort, peerProcess peer) {

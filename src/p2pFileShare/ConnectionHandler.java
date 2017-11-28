@@ -4,11 +4,12 @@ import java.io.*;
 import java.net.Socket;
 
 public class ConnectionHandler extends Thread{
-    private String myPeerID;
+    private int myPeerID;
     private peerProcess myPeer;
     private String theirPeerID;
-    private Messages message;    //message received from the client
-    private Messages MESSAGE;    //uppercase message send to the client
+
+    private Messages incomingMessage;    //incomingMessage received from the client
+    private Messages outgoingMessage;    //uppercase incomingMessage send to the client
     private Socket connection;
     private ObjectInputStream in;	//stream read from the socket
     private ObjectOutputStream out;    //stream write to the socket
@@ -17,7 +18,8 @@ public class ConnectionHandler extends Thread{
     public ConnectionHandler(Socket connection, String myPeerID, peerProcess myPeer) throws FileNotFoundException, UnsupportedEncodingException {
         this.myPeer = myPeer;
         this.connection = connection;
-        this.myPeerID = myPeerID;
+        this.myPeerID = Integer.parseInt(myPeerID);
+        this.theirPeerID = null;
         this.writer = new PrintWriter(myPeerID +"_log.txt", "UTF-8");
     }
 
@@ -36,22 +38,26 @@ public class ConnectionHandler extends Thread{
             writer.close();
 
 
-//            try{
-//                //Sending each other their respective PeerID to identify each other
-//                establishConnection(myPeerID);
-//
-//                //Send secret message
-//                //MESSAGE = new Handshake(5);
-//                //sendMessage(MESSAGE);
-//
-//                //message = (String)in.readObject();
-//                //writer.println("[" + myPeerID + "] Receive message: " + message + " from " + theirPeerID);
-//
-//
-//            }
-//            catch(ClassNotFoundException classnot){
-//                System.err.println("[" + myPeerID + "] Data received in unknown format");
-//            }
+            try{
+                while(/*!everyoneHasEverything*/ true) {
+                    //Sending each other their respective PeerID to identify each other
+                    //establishConnection(myPeerID);
+
+                    //Send Message
+                    // if(this.theirPeerID == null)
+                    //Message outgoingMessage = createMessage(myPeerID, -1;
+                    //Message outgoingMessage = createMessage(myPeerID, Integer.parseInt(theirPeerID), myPeer);
+                    //sendMessage(outgoingMessage);
+
+                    //incomingMessage = (Messages)in.readObject();
+                    //incomingMessage.handleMessage(incomingMessage, myPeer);
+                    //writer.println("[" + myPeerID + "] Receive incomingMessage: " + incomingMessage + " from " + theirPeerID);
+
+                }
+            }
+            catch(ClassNotFoundException classnot){
+                System.err.println("[" + myPeerID + "] Data received in unknown format");
+            }
         }
         catch(IOException ioException){
             writer.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
@@ -69,13 +75,13 @@ public class ConnectionHandler extends Thread{
         }
     }
 
-    //send a message to the output stream
+    //send a incomingMessage to the output stream
     public void sendMessage(String msg)
     {
         try{
             out.writeObject(msg);
             out.flush();
-            writer.println("[" + myPeerID + "] Send message: " + msg + " to " + theirPeerID);
+            writer.println("[" + myPeerID + "] Send incomingMessage: " + msg + " to " + theirPeerID);
         }
         catch(IOException ioException){
             ioException.printStackTrace();
@@ -92,11 +98,11 @@ public class ConnectionHandler extends Thread{
             out.flush();
             try {
                 //Receiving from Peer that is being connected, their PeerID
-                message = (Messages) in.readObject();
+                incomingMessage = (Messages) in.readObject();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            //message
+            //incomingMessage
             writer.println("[" + myPeerID + "] Successful connection to " + theirPeerID + "!!!");
         }
         catch(IOException ioException){
