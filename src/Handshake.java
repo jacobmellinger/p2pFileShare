@@ -22,8 +22,10 @@ public class Handshake extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg, peerProcess myPeer) {
+	public void handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
 		Handshake message = (Handshake) msg;
 
+		myPeer.peerInfoVector.get(neighborPeerIndex).hasReceivedHandshake = true;
+		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceived = 8;
 	}
 }

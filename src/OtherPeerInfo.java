@@ -5,21 +5,19 @@ public class OtherPeerInfo {
     public String peerAddress;
     public int peerPort;
     public Vector<Integer> bitMap;
-    public boolean hasReceivedHandshake = false;
 
+    public boolean hasReceivedHandshake = false;
     public boolean hasReceivedBitfield = false;
     public boolean hasSentBitfield = false;
-
     public boolean hasSentHaveMessage;
-
+    public boolean hasReceivedHaveMessage;
     public boolean isInterested;
-
     public boolean isPreferredNeighbor;
     public boolean isOptimisticallyUnchoked;
+
     public int lastMessageReceived;
     public int lastMessageSent;
-
-    public int numberPeicesReceived;
+    public boolean themChokingMe;
 
     public OtherPeerInfo() {
 

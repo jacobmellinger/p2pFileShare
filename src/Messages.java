@@ -2,12 +2,13 @@
 
 
 import java.io.Serializable;
+import java.util.Vector;
 
 public abstract class Messages implements Serializable {
 	
 	int messageType;
 	public abstract int getMessageType();
-	public abstract void handleMessage(Messages msg, peerProcess myPeer);
+	public abstract void handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex);
 
 	public Messages createMessage(int myPeerID, int otherPeerID, peerProcess myPeer) {
 		if (otherPeerID == -1) {
