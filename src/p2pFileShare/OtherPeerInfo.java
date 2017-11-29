@@ -10,6 +10,17 @@ public class OtherPeerInfo {
     public boolean hasReceivedBitfield = false;
     public boolean hasSentBitfield = false;
 
+    public boolean hasSentHaveMessage;
+
+    public boolean isInterested;
+
+    public boolean isPreferredNeighbor;
+    public boolean isOptimisticallyUnchoked;
+    public int lastMessageReceived;
+    public int lastMessageSent;
+
+    public int numberPeicesReceived;
+
     public OtherPeerInfo() {
 
     }

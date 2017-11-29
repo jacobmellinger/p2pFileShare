@@ -1,6 +1,9 @@
 //package messages;
 
+import com.sun.xml.internal.xsom.XSWildcard;
+
 import java.io.Serializable;
+import java.util.Vector;
 
 public abstract class Messages implements Serializable {
 	
@@ -29,10 +32,29 @@ public abstract class Messages implements Serializable {
 
 
 		//Received a Handshake but no other messages
-		if (myPeer.peerInfoVector.get(myPeerIndex).hasReceivedHandshake && !myPeer.peerInfoVector.get(myPeerIndex).hasSentBitfield) {
+		if (myPeer.peerInfoVector.get(otherPeerIndex).hasReceivedHandshake && !myPeer.peerInfoVector.get(otherPeerIndex).hasSentBitfield) {
 			BitfieldMessage newMessage = new BitfieldMessage(myPeer.peerInfoVector.get(myPeerIndex).bitMap);
 			return newMessage;
 		}
+
+
+		// Sending interested/notInterested Messages when I've already gotten their bitfield Message
+		if (myPeer.peerInfoVector.get(otherPeerIndex).hasReceivedBitfield && !myPeer.peerInfoVector.get(otherPeerIndex).hasSentHaveMessage) {
+			for (int i = 0; i < myPeer.peerInfoVector.size(); i++) {
+
+				// Do they have a peice that I don't?
+				if (myPeer.peerInfoVector.get(otherPeerIndex).bitMap.get(i) == 1 && myPeer.peerInfoVector.get(myPeerIndex).bitMap.get(i) == 0) {
+					InterestedMessage newMessage = new InterestedMessage();
+					return newMessage;
+				}
+				else {
+					NotInterestedMessage newMessage = new NotInterestedMessage();
+					return newMessage;
+				}
+			}
+		}
+
+
 
 		// remove below line
 		return new Handshake(myPeerID);
