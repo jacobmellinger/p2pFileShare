@@ -1,41 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fd734d88-fb94-4509-9823-727703b8f3b0" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/p2pFileShare/PeerProcess.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/p2pFileShare/Test/Main.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/p2pFileShare/Test/TestConnectionHandler.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/p2pFileShare/Test/TestPeer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/p2pFileShare/messages/BitfieldMessage.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/p2pFileShare/messages/ChokeMessage.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/p2pFileShare/messages/Handshake.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/p2pFileShare/messages/HaveMessage.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/p2pFileShare/messages/InterestedMessage.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/p2pFileShare/messages/Messages.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/p2pFileShare/messages/NotInterestedMessage.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/p2pFileShare/messages/PieceMessage.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/p2pFileShare/messages/RequestMessage.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/p2pFileShare/messages/UnchokeMessage.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/BitfieldMessage.java" afterPath="$PROJECT_DIR$/src/BitfieldMessage.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/ChokeMessage.java" afterPath="$PROJECT_DIR$/src/ChokeMessage.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/Client.java" afterPath="$PROJECT_DIR$/src/Client.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/ConnectionHandler.java" afterPath="$PROJECT_DIR$/src/ConnectionHandler.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/Handshake.java" afterPath="$PROJECT_DIR$/src/Handshake.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/HaveMessage.java" afterPath="$PROJECT_DIR$/src/HaveMessage.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/InterestedMessage.java" afterPath="$PROJECT_DIR$/src/InterestedMessage.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/Messages.java" afterPath="$PROJECT_DIR$/src/Messages.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/NotInterestedMessage.java" afterPath="$PROJECT_DIR$/src/NotInterestedMessage.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/OtherPeerInfo.java" afterPath="$PROJECT_DIR$/src/OtherPeerInfo.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/PeerStarter.java" afterPath="$PROJECT_DIR$/src/PeerStarter.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/PieceMessage.java" afterPath="$PROJECT_DIR$/src/PieceMessage.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/RemotePeerInfo.java" afterPath="$PROJECT_DIR$/src/RemotePeerInfo.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/RequestMessage.java" afterPath="$PROJECT_DIR$/src/RequestMessage.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/Server.java" afterPath="$PROJECT_DIR$/src/Server.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/StartRemotePeers.java" afterPath="$PROJECT_DIR$/src/StartRemotePeers.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/UnchokeMessage.java" afterPath="$PROJECT_DIR$/src/UnchokeMessage.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/compileJava" afterPath="$PROJECT_DIR$/src/compileJava" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/p2pFileShare/peerProcess.java" afterPath="$PROJECT_DIR$/src/peerProcess.java" />
-    </list>
+    <list default="true" id="fd734d88-fb94-4509-9823-727703b8f3b0" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
