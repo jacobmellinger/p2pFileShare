@@ -23,10 +23,11 @@ public class ChokeMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg, peerProcess2 myPeer, int myPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int myPeerIndex) {
 		ChokeMessage message = (ChokeMessage) msg;
 
 		myPeer.peerInfoVector.get(myPeerIndex).themChokingMe = true;
 		myPeer.peerInfoVector.get(myPeerIndex).lastMessageReceived = 0;
+		return 1;
 	}
 }

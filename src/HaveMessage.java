@@ -29,7 +29,7 @@ public class HaveMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg, peerProcess2 myPeer, int neighborPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
 		HaveMessage message = (HaveMessage) msg;
 
 		// Update our representation of their bitMap with the peice they just said they have.
@@ -37,6 +37,7 @@ public class HaveMessage extends Messages {
 
 		myPeer.peerInfoVector.get(neighborPeerIndex).hasReceivedHaveMessage = true;
 		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceived = 4;
+		return 1;
 	}
 
 }

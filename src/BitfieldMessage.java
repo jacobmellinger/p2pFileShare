@@ -41,12 +41,13 @@ public class BitfieldMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg, peerProcess2 myPeer, int neighborPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
 		BitfieldMessage message = (BitfieldMessage) msg;
 
 		// All we need to do is update our knowledge of their bitMap
 		myPeer.peerInfoVector.get(neighborPeerIndex).bitMap = message.messagePayload;
 		myPeer.peerInfoVector.get(neighborPeerIndex).hasReceivedBitfield = true;
 		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceived = 5;
+		return 1;
 	}
 }

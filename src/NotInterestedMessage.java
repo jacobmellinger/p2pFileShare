@@ -22,11 +22,12 @@ public class NotInterestedMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg, peerProcess2 myPeer, int neighborPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
 		NotInterestedMessage message = (NotInterestedMessage) msg;
 
 		myPeer.peerInfoVector.get(neighborPeerIndex).isInterested = false;
 		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceived = 3;
+		return 1;
 	}
 
 }

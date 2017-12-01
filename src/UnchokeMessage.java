@@ -22,9 +22,13 @@ public class UnchokeMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg, peerProcess2 myPeer, int neighborPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
 		UnchokeMessage message = (UnchokeMessage) msg;
 
+		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceived = 1;
+		myPeer.peerInfoVector.get(neighborPeerIndex).themChokingMe = false;
+
+		return 1;
 	}
 
 }

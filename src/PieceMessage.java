@@ -36,7 +36,7 @@ public class PieceMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg, peerProcess2 myPeer, int neighborPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
 		PieceMessage message = (PieceMessage) msg;
 
 		int pieceIndex = message.indexField;
@@ -47,5 +47,8 @@ public class PieceMessage extends Messages {
 		// How to store the stream of bits that were sent?
 
 		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceived = 7;
+
+
+		return 1;
 	}
 }

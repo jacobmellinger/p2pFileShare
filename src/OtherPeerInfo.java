@@ -5,10 +5,12 @@ public class OtherPeerInfo {
     public String peerAddress;
     public int peerPort;
     public Vector<Integer> bitMap;
+    public Vector<Integer> pendingRequests;
 
     public boolean hasReceivedHandshake = false;
     public boolean hasReceivedBitfield = false;
     public boolean hasSentBitfield = false;
+
     public boolean hasSentHaveMessage;
     public boolean hasReceivedHaveMessage;
     public boolean isInterested;
@@ -34,6 +36,7 @@ public class OtherPeerInfo {
             } else {
                 bitMap.addElement(0);
             }
+            pendingRequests.addElement(0);
         }
     }
 }

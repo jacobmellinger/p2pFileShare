@@ -8,9 +8,9 @@ public class RequestMessage extends Messages {
 		messageType = 6;
 	}
 	
-	RequestMessage(int newLength) {
+	RequestMessage(int indexFeild) {
 		messageType = 6;
-		messageLength = newLength;
+		messagePayload = indexFeild;
 	}
 	
 	RequestMessage (int newLength, int indexField) {
@@ -33,9 +33,10 @@ public class RequestMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg, peerProcess2 myPeer, int neighborPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
 		RequestMessage message = (RequestMessage) msg;
 
+		return 1;
 	}
 
 }

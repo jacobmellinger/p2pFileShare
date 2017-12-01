@@ -22,10 +22,16 @@ public class Handshake extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg, peerProcess2 myPeer, int neighborPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
 		Handshake message = (Handshake) msg;
 
-		myPeer.peerInfoVector.get(neighborPeerIndex).hasReceivedHandshake = true;
-		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceived = 8;
+		if (message.handshakeHeader == "P2PFILESHARINGPROJ") {
+			myPeer.peerInfoVector.get(neighborPeerIndex).hasReceivedHandshake = true;
+			myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceived = 8;
+			return message.peerID;
+		}
+		else {
+			return -1;
+		}
 	}
 }
