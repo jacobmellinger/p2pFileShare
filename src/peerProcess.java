@@ -4,71 +4,6 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Vector;
 
-class Server extends Thread {
-
-    public String peerID;
-    public int sPort;
-    public peerProcess2 peer;
-
-    Server(String peerID, int sPort, peerProcess2 peer) {
-        this.peerID = peerID;
-        this.sPort = sPort;
-        this.peer = peer;
-    }
-
-    public void run() {
-        ServerSocket listener = null;
-        try {
-            listener = new ServerSocket(sPort);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            while (true) {
-                new ConnectionHandler(listener.accept(), peerID, peer).startTimedConnection();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                listener.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-}
-
-class Client extends Thread {
-
-    public String peerID;
-    public int cPort;
-    public peerProcess2 peer;
-    Socket requestSocket;           //socket connect to the server
-
-    Client(){
-        peerID = "";
-        cPort = 0;
-        peer = null;
-    }
-
-    Client(String peerID, int cPort, peerProcess2 peer) {
-        this.peerID = peerID;
-        this.cPort = cPort;
-        this.peer = peer;
-    }
-
-    public void run() {
-        try {
-            requestSocket = new Socket("localhost", cPort);
-            new ConnectionHandler(requestSocket, peerID, peer).startTimedConnection();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-}
-
 public class peerProcess {
     // private static int sPort = 8000;   //The server will be listening on this port number
     //private static int numOfClients = 0;
@@ -148,58 +83,37 @@ public class peerProcess {
     }
 
     public static void main(String [] args) throws IOException {
-//        peerProcess2 myPeerProcess2 = new peerProcess2(Integer.parseInt(args[0]));
-        peerProcess2 myPeerProcess2 = new peerProcess2(1001); //USE THIS FOR TESTING IN IDE
+//        peerProcess myPeerProcess = new peerProcess(Integer.parseInt(args[0]));
+        peerProcess myPeerProcess = new peerProcess(1001); //USE THIS FOR TESTING IN IDE
 
-        myPeerProcess2.getCommonConfiguration();
+        myPeerProcess.getCommonConfiguration();
 
-        int sizeOfBitMap = myPeerProcess2.FileSize/ myPeerProcess2.PieceSize;
-        if(myPeerProcess2.FileSize% myPeerProcess2.PieceSize > 0) sizeOfBitMap++;
+        int sizeOfBitMap = myPeerProcess.FileSize/ myPeerProcess.PieceSize;
+        if(myPeerProcess.FileSize% myPeerProcess.PieceSize > 0) sizeOfBitMap++;
 
-        myPeerProcess2.getPeerConfiguration(sizeOfBitMap);
+        myPeerProcess.getPeerConfiguration(sizeOfBitMap);
 
-        int numOfClients = myPeerProcess2.peerInfoVector.indexOf(myPeerProcess2.myPeerInfo);
-        int sPort = myPeerProcess2.myPeerInfo.peerPort;
+        int numOfClients = myPeerProcess.peerInfoVector.indexOf(myPeerProcess.myPeerInfo);
+        int sPort = myPeerProcess.myPeerInfo.peerPort;
         String cPort = "";
 
-        System.out.println(myPeerProcess2.myPeerID + " is running!");
+        System.out.println(myPeerProcess.myPeerID + " is running!");
 
-        Server2 server = new Server2(Integer.toString(myPeerProcess2.myPeerID), sPort, myPeerProcess2);
-        server.start();
-//        startServer(Integer.toString(myPeerProcess2.myPeerID), sPort, myPeerProcess2);
-        Vector<Client2> client2s = new Vector<>();
+        startServer(Integer.toString(myPeerProcess.myPeerID), sPort, myPeerProcess);
 
         for (int i=0; i<numOfClients; i++)
         {
-            cPort = Integer.toString(myPeerProcess2.peerInfoVector.get(i).peerPort);
-            client2s.addElement(new Client2(Integer.toString(myPeerProcess2.myPeerID), Integer.parseInt(cPort), myPeerProcess2));
-            client2s.get(i).start();
-
-//            cPort = Integer.toString(myPeerProcess2.peerInfoVector.get(i).peerPort);
-//            startClient(Integer.toString(myPeerProcess2.myPeerID), Integer.parseInt(cPort), myPeerProcess2);
+            cPort = Integer.toString(myPeerProcess.peerInfoVector.get(i).peerPort);
+            startClient(Integer.toString(myPeerProcess.myPeerID), Integer.parseInt(cPort), myPeerProcess);
         }
 
-        try
-        {
-            server.join();
-            for (int i=0; i<numOfClients; i++)
-            {
-                client2s.get(i).join();
-            }
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
 
         // Up to here, the peer has all the config info and has started
-        // client2s to connect to all peers started before it
-
-
+        // clients to connect to all peers started before it
 
     }
 
-    public static void startServer(String peerID, int sPort, peerProcess2 peer) {
+    public static void startServer(String peerID, int sPort, peerProcess peer) {
         Thread serverThread = new Thread() {
             @Override
             public void run() {
@@ -228,7 +142,7 @@ public class peerProcess {
         serverThread.start();
     }
 
-    public static void startClient(String peerID, int cPort, peerProcess2 peer) {
+    public static void startClient(String peerID, int cPort, peerProcess peer) {
         Thread clientThread = new Thread() {
             Socket requestSocket;           //socket connect to the server
             ObjectOutputStream out;         //stream write to the socket

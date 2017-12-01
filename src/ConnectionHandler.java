@@ -3,7 +3,7 @@ import java.net.Socket;
 
 public class ConnectionHandler extends Thread{
     private int myPeerID;
-    private peerProcess2 myPeer;
+    private peerProcess myPeer;
     private String theirPeerID;
 
     private Messages incomingMessage;    //incomingMessage received from the client
@@ -13,7 +13,7 @@ public class ConnectionHandler extends Thread{
     private ObjectOutputStream out;    //stream write to the socket
     private PrintWriter writer;
 
-    public ConnectionHandler(Socket connection, String myPeerID, peerProcess2 myPeer) throws FileNotFoundException, UnsupportedEncodingException {
+    public ConnectionHandler(Socket connection, String myPeerID, peerProcess myPeer) throws FileNotFoundException, UnsupportedEncodingException {
         this.myPeer = myPeer;
         this.connection = connection;
         this.myPeerID = Integer.parseInt(myPeerID);
