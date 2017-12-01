@@ -27,7 +27,7 @@ public class Handshake extends Messages {
 
 		if (message.handshakeHeader == "P2PFILESHARINGPROJ") {
 			myPeer.peerInfoVector.get(neighborPeerIndex).hasReceivedHandshake = true;
-			myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceived = 8;
+			myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 8;
 			return message.peerID;
 		}
 		else {

@@ -15,12 +15,15 @@ public class OtherPeerInfo {
     public boolean isPreferredNeighbor;
     public boolean isOptimisticallyUnchoked;
 
-    public int lastMessageReceived;
-    public int lastMessageSent;
+    public int lastMessageReceivedFromPeer;
+    public int lastMessageSentToPeer;
+    public int indexTheyRequested;
+    public int numberPiecesReceivedFromPeer;
     public boolean themChokingMe;
 
     public OtherPeerInfo() {
-
+        this.lastMessageSentToPeer = -1;
+        this.lastMessageReceivedFromPeer = -1;
     }
 
     public OtherPeerInfo(int pId, String pAddress, int pPort, int hasFile, int sizeOfBitMap) {

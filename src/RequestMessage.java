@@ -11,6 +11,9 @@ public class RequestMessage extends Messages {
 	RequestMessage(int indexFeild) {
 		messageType = 6;
 		messagePayload = indexFeild;
+		if (indexFeild == -1) {
+			errorMsg = true;
+		}
 	}
 	
 	RequestMessage (int newLength, int indexField) {
@@ -36,6 +39,8 @@ public class RequestMessage extends Messages {
 	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
 		RequestMessage message = (RequestMessage) msg;
 
+		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 6;
+		myPeer.peerInfoVector.get(neighborPeerIndex).indexTheyRequested = message.messagePayload;
 		return 1;
 	}
 

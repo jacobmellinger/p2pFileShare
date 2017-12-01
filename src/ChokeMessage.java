@@ -27,7 +27,7 @@ public class ChokeMessage extends Messages {
 		ChokeMessage message = (ChokeMessage) msg;
 
 		myPeer.peerInfoVector.get(myPeerIndex).themChokingMe = true;
-		myPeer.peerInfoVector.get(myPeerIndex).lastMessageReceived = 0;
+		myPeer.peerInfoVector.get(myPeerIndex).lastMessageReceivedFromPeer = 0;
 		return 1;
 	}
 }

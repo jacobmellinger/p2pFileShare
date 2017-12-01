@@ -47,7 +47,7 @@ public class BitfieldMessage extends Messages {
 		// All we need to do is update our knowledge of their bitMap
 		myPeer.peerInfoVector.get(neighborPeerIndex).bitMap = message.messagePayload;
 		myPeer.peerInfoVector.get(neighborPeerIndex).hasReceivedBitfield = true;
-		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceived = 5;
+		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 5;
 		return 1;
 	}
 }

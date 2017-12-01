@@ -3,7 +3,8 @@ public class PieceMessage extends Messages {
 	private int messageType;
 	private int messageLength;
 	private int indexField;
-	private String pieceContents;	
+	private byte[] pieceContents;
+
 	
 	
 	PieceMessage(){
@@ -15,17 +16,17 @@ public class PieceMessage extends Messages {
 		indexField = index;
 	}
 	
-	PieceMessage(int index, String indexContents){
+	PieceMessage(int index, byte[] indexContents){
 		messageType = 7;
 		indexField = index;
 		pieceContents = indexContents;
 	}
 	
-	public String getPieceContents() {
+	public byte[] getPieceContents() {
 		return pieceContents;
 	}
 	
-	public void setPieceContents(String newContents) {
+	public void setPieceContents(byte[] newContents) {
 		pieceContents = newContents;
 	}
 	
@@ -44,11 +45,10 @@ public class PieceMessage extends Messages {
 		// Just set the index in their bitMap even though it's probably already 1
 		myPeer.peerInfoVector.get(neighborPeerIndex).bitMap.set(indexField, 1);
 
-		// How to store the stream of bits that were sent?
+		// Store the new piece on our client machine
 
-		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceived = 7;
-
-
+		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 7;
+		myPeer.peerInfoVector.get(neighborPeerIndex).numberPiecesReceivedFromPeer++;
 		return 1;
 	}
 }

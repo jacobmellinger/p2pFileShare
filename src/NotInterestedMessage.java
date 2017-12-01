@@ -26,7 +26,7 @@ public class NotInterestedMessage extends Messages {
 		NotInterestedMessage message = (NotInterestedMessage) msg;
 
 		myPeer.peerInfoVector.get(neighborPeerIndex).isInterested = false;
-		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceived = 3;
+		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 3;
 		return 1;
 	}
 

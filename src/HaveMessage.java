@@ -36,7 +36,7 @@ public class HaveMessage extends Messages {
 		myPeer.peerInfoVector.get(neighborPeerIndex).bitMap.set(messagePayload, 1);
 
 		myPeer.peerInfoVector.get(neighborPeerIndex).hasReceivedHaveMessage = true;
-		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceived = 4;
+		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 4;
 		return 1;
 	}
 

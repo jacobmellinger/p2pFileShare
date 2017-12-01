@@ -25,9 +25,8 @@ public class UnchokeMessage extends Messages {
 	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
 		UnchokeMessage message = (UnchokeMessage) msg;
 
-		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceived = 1;
+		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 1;
 		myPeer.peerInfoVector.get(neighborPeerIndex).themChokingMe = false;
-
 		return 1;
 	}
 
