@@ -41,7 +41,7 @@ public class BitfieldMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
+	public void handleMessage(Messages msg, peerProcess2 myPeer, int neighborPeerIndex) {
 		BitfieldMessage message = (BitfieldMessage) msg;
 
 		// All we need to do is update our knowledge of their bitMap

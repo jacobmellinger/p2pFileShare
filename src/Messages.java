@@ -2,15 +2,14 @@
 
 
 import java.io.Serializable;
-import java.util.Vector;
 
 public abstract class Messages implements Serializable {
 	
 	int messageType;
 	public abstract int getMessageType();
-	public abstract void handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex);
+	public abstract void handleMessage(Messages msg, peerProcess2 myPeer, int neighborPeerIndex);
 
-	public Messages createMessage(int myPeerID, int otherPeerID, peerProcess myPeer) {
+	public Messages createMessage(int myPeerID, int otherPeerID, peerProcess2 myPeer) {
 		if (otherPeerID == -1) {
 			Handshake newMessage =  new Handshake(myPeerID);
 			return newMessage;

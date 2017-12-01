@@ -22,7 +22,7 @@ public class InterestedMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
+	public void handleMessage(Messages msg, peerProcess2 myPeer, int neighborPeerIndex) {
 		InterestedMessage message = (InterestedMessage) msg;
 
 		myPeer.peerInfoVector.get(neighborPeerIndex).isInterested = true;

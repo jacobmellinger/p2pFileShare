@@ -2,3 +2,6 @@ p2pFileShare.iml
 *.class
 out/*
 .idea/*
+tempFiles/*
+src/temp*
+peerProcess2.java

@@ -22,7 +22,7 @@ public class UnchokeMessage extends Messages {
 	}
 
 	@Override
-	public void handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
+	public void handleMessage(Messages msg, peerProcess2 myPeer, int neighborPeerIndex) {
 		UnchokeMessage message = (UnchokeMessage) msg;
 
 	}
