@@ -1,6 +1,8 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.Vector;
 
@@ -20,6 +22,10 @@ public class peerProcess {
     public Vector<OtherPeerInfo> peerInfoVector;
     public OtherPeerInfo myPeerInfo;
     public LinkedList<Integer> pendingRequests;
+    public byte[][] fileByteArray = null;
+    public String fileName = "File.dat";
+    public String path = System.getProperty("user.dir");
+    public int sizeOfBitMap = 0;
 
     peerProcess(int myPeerID){
         this.myPeerID = myPeerID;
@@ -28,7 +34,6 @@ public class peerProcess {
     public void getCommonConfiguration()
     {
         String st;
-        String path = System.getProperty("user.dir");
         try {
             BufferedReader in = new BufferedReader(new FileReader(path + "\\" + "Common.cfg"));
             while((st = in.readLine()) != null) {
@@ -63,7 +68,6 @@ public class peerProcess {
     {
         String st;
         this.peerInfoVector = new Vector<OtherPeerInfo>();
-        String path = System.getProperty("user.dir");
         try {
             BufferedReader in = new BufferedReader(new FileReader(path + "\\" + "PeerInfo.cfg"));
             while((st = in.readLine()) != null) {
@@ -82,16 +86,64 @@ public class peerProcess {
         }
     }
 
+    public void createByteArrayFromFile(int sizeOfBitMap) throws Exception {
+        File file = new File(path + "\\peer_" + myPeerID +"\\" + fileName);
+        if (!file.exists()) return;
+
+        Path Path = file.toPath();
+        byte[] fileArray;
+        fileArray = Files.readAllBytes(Path);
+        if(fileArray.length != FileSize)
+        {
+            throw new Exception("Not the right File!");
+        }
+
+        fileByteArray = new byte[sizeOfBitMap][PieceSize];
+        for(int i=0; i<sizeOfBitMap; i++)
+        {
+            for(int j=i*PieceSize, k=0; j<(i+1)*PieceSize; j++, k++)
+            {
+                fileByteArray[i][k] =  fileArray[j];
+                if (j == fileArray.length-1) {
+                    break;
+                }
+            }
+        }
+    }
+
+    public void createFileFromByteArray(int sizeOfBitMap) throws IOException {
+        File file = new File(path + "\\peer_" + myPeerID +"\\" + fileName);
+        if(file.exists()) return;
+
+        fileByteArray = new byte[sizeOfBitMap][PieceSize];
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(path + "\\peer_"+ myPeerID +"\\" + FileName);
+            for (int i = 0; i < sizeOfBitMap; i++)
+            {
+                fileOutputStream.write(fileByteArray[i]);
+            }
+        } finally {
+            fileOutputStream.close();
+        }
+    }
+
     public static void main(String [] args) throws IOException {
 //        peerProcess myPeerProcess = new peerProcess(Integer.parseInt(args[0]));
         peerProcess myPeerProcess = new peerProcess(1001); //USE THIS FOR TESTING IN IDE
 
         myPeerProcess.getCommonConfiguration();
 
-        int sizeOfBitMap = myPeerProcess.FileSize/ myPeerProcess.PieceSize;
-        if(myPeerProcess.FileSize% myPeerProcess.PieceSize > 0) sizeOfBitMap++;
+        myPeerProcess.sizeOfBitMap = myPeerProcess.FileSize/ myPeerProcess.PieceSize;
+        if(myPeerProcess.FileSize% myPeerProcess.PieceSize > 0) myPeerProcess.sizeOfBitMap++;
 
-        myPeerProcess.getPeerConfiguration(sizeOfBitMap);
+        myPeerProcess.getPeerConfiguration(myPeerProcess.sizeOfBitMap);
+
+        try {
+            myPeerProcess.createByteArrayFromFile(myPeerProcess.sizeOfBitMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         int numOfClients = myPeerProcess.peerInfoVector.indexOf(myPeerProcess.myPeerInfo);
         int sPort = myPeerProcess.myPeerInfo.peerPort;
@@ -107,6 +159,7 @@ public class peerProcess {
             startClient(Integer.toString(myPeerProcess.myPeerID), Integer.parseInt(cPort), myPeerProcess);
         }
 
+//        myPeerProcess.createFileFromByteArray(myPeerProcess.sizeOfBitMap);
 
         // Up to here, the peer has all the config info and has started
         // clients to connect to all peers started before it

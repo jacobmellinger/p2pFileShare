@@ -90,6 +90,10 @@ public class ConnectionHandler extends Thread{
                                 in.close();
                                 out.close();
                                 connection.close();
+                                synchronized (myPeer.fileByteArray)
+                                {
+                                    myPeer.createFileFromByteArray(myPeer.sizeOfBitMap);
+                                }
                             }
                             catch(IOException ioException){
                                 System.out.println("[" + myPeerID + "] Disconnect with " + theirPeerID);

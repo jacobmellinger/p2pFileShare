@@ -79,6 +79,5 @@ public class tempFileTransfer
         byte[] fileArray2;
         fileArray2 = Files.readAllBytes(Path);
         System.out.println(fileArray2.length);
-
     }
 }
