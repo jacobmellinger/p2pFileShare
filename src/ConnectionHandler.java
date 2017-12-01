@@ -21,142 +21,182 @@ public class ConnectionHandler extends Thread{
         this.writer = new PrintWriter(myPeerID +"_log.txt", "UTF-8");
     }
 
-    public  void startTimedConnection() {
-        new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-                    public void run()
-                    {
-                        try{
-                            //initialize Input and Output streams
-                            out = new ObjectOutputStream(connection.getOutputStream());
-                            out.flush();
-                            in = new ObjectInputStream(connection.getInputStream());
+//    public  void startTimedConnection() {
+//        new java.util.Timer().schedule(
+//                new java.util.TimerTask() {
+//                    public void run()
+//                    {
+//                        try{
+//                            //initialize Input and Output streams
+//                            out = new ObjectOutputStream(connection.getOutputStream());
+//                            out.flush();
+//                            in = new ObjectInputStream(connection.getInputStream());
+//
+//                            //String workingDir = System.getProperty("user.dir");
+//                            //FileHandler log = new FileHandler(workingDir + "/" + myPeerID +".log");
+//                            //PrintWriter writer = new PrintWriter(myPeerID +"_log.txt", "UTF-8");
+//                            writer.println("CREATING A LOG FILE!!");
+//                            writer.close();
+//
+//                            //todo remove this
+//                            int myPeerIndex = 0;
+//                            for (int i = 0; i < myPeer.peerInfoVector.size(); i++) {
+//                                if (myPeer.peerInfoVector.get(i).peerId == myPeerID){
+//                                    myPeerIndex = i;
+//                                    break;
+//                                }
+//                            }
+//                            //todo~~~~
+//
+//                            try{
+//                                while(/*!everyoneHasEverything*/ true) {
+//                                    //Sending each other their respective PeerID to identify each other
+//                                    //establishConnection(myPeerID);
+//
+//                                    //Send Message
+//                                    synchronized (myPeer.peerInfoVector.get(myPeerIndex)) {
+//                                        if (theirPeerID == null) {
+//                                            outgoingMessage = outgoingMessage.createMessage(myPeerID, -1, myPeer);
+//                                        } else {
+//                                            outgoingMessage = outgoingMessage.createMessage(myPeerID, Integer.parseInt(theirPeerID), myPeer);
+//                                        }
+//
+//                                        int otherPeerIndex = 0;
+//                                        for (int i = 0; i < myPeer.peerInfoVector.size(); i++) {
+//                                            if (myPeer.peerInfoVector.get(i).peerId == Integer.parseInt(theirPeerID)) {
+//                                                otherPeerIndex = i;
+//                                                break;
+//                                            }
+//
+//                                        }
+//                                        sendMessage(outgoingMessage);
+//
+//                                        incomingMessage = (Messages) in.readObject();
+//                                        incomingMessage.handleMessage(incomingMessage, myPeer, otherPeerIndex);
+//                                        //writer.println("[" + myPeerID + "] Receive incomingMessage: " + incomingMessage + " from " + theirPeerID);
+//                                    }
+//                                }
+//                            }
+//                            catch(ClassNotFoundException classnot){
+//                                System.err.println("[" + myPeerID + "] Data received in unknown format");
+//                            }
+//                        }
+//                        catch(IOException ioException){
+//                            System.out.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
+//                        }
+//                        finally{
+//                            //Close connections
+//                            try{
+//                                in.close();
+//                                out.close();
+//                                connection.close();
+//                                synchronized (myPeer.fileByteArray)
+//                                {
+//                                    myPeer.createFileFromByteArray(myPeer.sizeOfBitMap);
+//                                }
+//                            }
+//                            catch(IOException ioException){
+//                                System.out.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
+//                            }
+//                        }
+//                    }
+//                }
+//        , 0, myPeer.UnchokingInterval*1000);
+//    }
 
-                            //String workingDir = System.getProperty("user.dir");
-                            //FileHandler log = new FileHandler(workingDir + "/" + myPeerID +".log");
-                            //PrintWriter writer = new PrintWriter(myPeerID +"_log.txt", "UTF-8");
-                            writer.println("CREATING A LOG FILE!!");
-                            writer.close();
+    public void run()
+    {
+        try{
+            //initialize Input and Output streams
+            out = new ObjectOutputStream(connection.getOutputStream());
+            out.flush();
+            in = new ObjectInputStream(connection.getInputStream());
 
-                            //todo remove this
-                            int myPeerIndex = 0;
-                            for (int i = 0; i < myPeer.peerInfoVector.size(); i++) {
-                                if (myPeer.peerInfoVector.get(i).peerId == myPeerID){
-                                    myPeerIndex = i;
+            //String workingDir = System.getProperty("user.dir");
+            //FileHandler log = new FileHandler(workingDir + "/" + myPeerID +".log");
+            //PrintWriter writer = new PrintWriter(myPeerID +"_log.txt", "UTF-8");
+            writer.println("CREATING A LOG FILE!!");
+            writer.close();
+            boolean isDone = false;
+
+
+            try{
+                while(/*!everyoneHasEverything*/ true) {
+                    //Sending each other their respective PeerID to identify each other
+                    //establishConnection(myPeerID);
+                    Handshake m = new Handshake();
+
+                    int myPeerIndex = -1;
+                    for (int i = 0; i < myPeer.peerInfoVector.size(); i++) {
+                        if (myPeer.peerInfoVector.get(i).peerId == myPeerID) {
+                            myPeerIndex = i;
+                            break;
+                        }
+                    }
+
+                    //Send Message
+                    synchronized (myPeer.peerInfoVector.get(myPeerIndex)) {
+                        if (this.theirPeerID == null) {
+                            outgoingMessage = m.createMessage(myPeerID, -1, myPeer);
+                        } else {
+                            outgoingMessage = m.createMessage(myPeerID, Integer.parseInt(theirPeerID), myPeer);
+                        }
+                        if (outgoingMessage.errorMsg == false && outgoingMessage != null) {
+                            sendMessage(outgoingMessage);
+                        }
+
+                        int otherPeerIndex = -1;
+                        for (int i = 0; i < myPeer.peerInfoVector.size(); i++) {
+                            if (theirPeerID != null){
+                                if (myPeer.peerInfoVector.get(i).peerId == Integer.parseInt(theirPeerID)) {
+                                    otherPeerIndex = i;
                                     break;
                                 }
                             }
-                            //todo~~~~
-
-                            try{
-                                while(/*!everyoneHasEverything*/ true) {
-                                    //Sending each other their respective PeerID to identify each other
-                                    //establishConnection(myPeerID);
-
-                                    //Send Message
-                                    synchronized (myPeer.peerInfoVector.get(myPeerIndex)) {
-                                        if (theirPeerID == null) {
-                                            outgoingMessage = outgoingMessage.createMessage(myPeerID, -1, myPeer);
-                                        } else {
-                                            outgoingMessage = outgoingMessage.createMessage(myPeerID, Integer.parseInt(theirPeerID), myPeer);
-                                        }
-
-                                        int otherPeerIndex = 0;
-                                        for (int i = 0; i < myPeer.peerInfoVector.size(); i++) {
-                                            if (myPeer.peerInfoVector.get(i).peerId == Integer.parseInt(theirPeerID)) {
-                                                otherPeerIndex = i;
-                                                break;
-                                            }
-
-                                        }
-                                        sendMessage(outgoingMessage);
-
-                                        incomingMessage = (Messages) in.readObject();
-                                        incomingMessage.handleMessage(incomingMessage, myPeer, otherPeerIndex);
-                                        //writer.println("[" + myPeerID + "] Receive incomingMessage: " + incomingMessage + " from " + theirPeerID);
-                                    }
-                                }
-                            }
-                            catch(ClassNotFoundException classnot){
-                                System.err.println("[" + myPeerID + "] Data received in unknown format");
-                            }
                         }
-                        catch(IOException ioException){
-                            System.out.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
+
+                        incomingMessage = (Messages) in.readObject();
+                        incomingMessage.handleMessage(incomingMessage, myPeer, otherPeerIndex);
+                        //writer.println("[" + myPeerID + "] Receive incomingMessage: " + incomingMessage + " from " + theirPeerID);
+
+                    }
+                    isDone = true;
+                    for(int i=0; i<myPeer.peerInfoVector.get(myPeerIndex).bitMap.size(); i++){
+                        if(myPeer.peerInfoVector.get(myPeerIndex).bitMap.get(i) == 0)
+                        {
+                            isDone = false;
+                            break;
                         }
-                        finally{
-                            //Close connections
-                            try{
-                                in.close();
-                                out.close();
-                                connection.close();
-                                synchronized (myPeer.fileByteArray)
-                                {
-                                    myPeer.createFileFromByteArray(myPeer.sizeOfBitMap);
-                                }
-                            }
-                            catch(IOException ioException){
-                                System.out.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
-                            }
+                    }
+                    if(isDone)
+                    {
+                        synchronized (myPeer.fileByteArray)
+                        {
+                            myPeer.createFileFromByteArray(myPeer.sizeOfBitMap);
                         }
                     }
                 }
-        , 0, myPeer.UnchokingInterval*1000);
+            }
+            catch(ClassNotFoundException classnot){
+                System.err.println("[" + myPeerID + "] Data received in unknown format");
+            }
+        }
+        catch(IOException ioException){
+            System.out.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
+        }
+        finally{
+            //Close connections
+            try{
+                in.close();
+                out.close();
+                connection.close();
+
+            }
+            catch(IOException ioException){
+                System.out.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
+            }
+        }
     }
-//    public void run()
-//    {
-//        try{
-//            //initialize Input and Output streams
-//            out = new ObjectOutputStream(connection.getOutputStream());
-//            out.flush();
-//            in = new ObjectInputStream(connection.getInputStream());
-//
-//            //String workingDir = System.getProperty("user.dir");
-//            //FileHandler log = new FileHandler(workingDir + "/" + myPeerID +".log");
-//            //PrintWriter writer = new PrintWriter(myPeerID +"_log.txt", "UTF-8");
-//            writer.println("CREATING A LOG FILE!!");
-//            writer.close();
-//
-//
-//            try{
-//                while(/*!everyoneHasEverything*/ true) {
-//                    //Sending each other their respective PeerID to identify each other
-//                    //establishConnection(myPeerID);
-//
-//                    //Send Message
-//                    if(this.theirPeerID == null){
-//                        outgoingMessage = outgoingMessage.createMessage(myPeerID, -1, myPeer);
-//                    } else{
-//                        outgoingMessage = outgoingMessage.createMessage(myPeerID, Integer.parseInt(theirPeerID), myPeer);
-//                    }
-//
-//                    sendMessage(outgoingMessage);
-//
-//                    incomingMessage = (Messages)in.readObject();
-//                    incomingMessage.handleMessage(incomingMessage, myPeer);
-//                    //writer.println("[" + myPeerID + "] Receive incomingMessage: " + incomingMessage + " from " + theirPeerID);
-//
-//                }
-//            }
-//            catch(ClassNotFoundException classnot){
-//                System.err.println("[" + myPeerID + "] Data received in unknown format");
-//            }
-//        }
-//        catch(IOException ioException){
-//            System.out.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
-//        }
-//        finally{
-//            //Close connections
-//            try{
-//                in.close();
-//                out.close();
-//                connection.close();
-//            }
-//            catch(IOException ioException){
-//                System.out.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
-//            }
-//        }
-//    }
 
     //send a incomingMessage to the output stream
     public void sendMessage(Messages msg)

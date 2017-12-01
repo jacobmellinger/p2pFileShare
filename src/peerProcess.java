@@ -23,9 +23,9 @@ public class peerProcess {
     public OtherPeerInfo myPeerInfo;
     public LinkedList<Integer> pendingRequests;
     public byte[][] fileByteArray = null;
-    public String fileName = "File.dat";
     public String path = System.getProperty("user.dir");
     public int sizeOfBitMap = 0;
+    public 
 
     peerProcess(int myPeerID){
         this.myPeerID = myPeerID;
@@ -87,7 +87,7 @@ public class peerProcess {
     }
 
     public void createByteArrayFromFile(int sizeOfBitMap) throws Exception {
-        File file = new File(path + "\\peer_" + myPeerID +"\\" + fileName);
+        File file = new File(path + "\\peer_" + myPeerID +"\\" + FileName);
         if (!file.exists()) return;
 
         Path Path = file.toPath();
@@ -112,7 +112,7 @@ public class peerProcess {
     }
 
     public void createFileFromByteArray(int sizeOfBitMap) throws IOException {
-        File file = new File(path + "\\peer_" + myPeerID +"\\" + fileName);
+        File file = new File(path + "\\peer_" + myPeerID +"\\" + FileName);
         if(file.exists()) return;
 
         fileByteArray = new byte[sizeOfBitMap][PieceSize];
@@ -138,7 +138,7 @@ public class peerProcess {
         if(myPeerProcess.FileSize% myPeerProcess.PieceSize > 0) myPeerProcess.sizeOfBitMap++;
 
         myPeerProcess.getPeerConfiguration(myPeerProcess.sizeOfBitMap);
-
+        myPeerProcess.fileByteArray = new byte[myPeerProcess.sizeOfBitMap][myPeerProcess.PieceSize];
         try {
             myPeerProcess.createByteArrayFromFile(myPeerProcess.sizeOfBitMap);
         } catch (Exception e) {
@@ -178,7 +178,8 @@ public class peerProcess {
                 }
                 try {
                     while (true) {
-                        new ConnectionHandler(listener.accept(), peerID, peer).startTimedConnection();
+//                        new ConnectionHandler(listener.accept(), peerID, peer).startTimedConnection();
+                        new ConnectionHandler(listener.accept(), peerID, peer).start();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -204,7 +205,8 @@ public class peerProcess {
             public void run() {
                 try {
                     requestSocket = new Socket("localhost", cPort);
-                    new ConnectionHandler(requestSocket, peerID, peer).startTimedConnection();
+//                    new ConnectionHandler(requestSocket, peerID, peer).startTimedConnection();
+                    new ConnectionHandler(requestSocket, peerID, peer).start();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
