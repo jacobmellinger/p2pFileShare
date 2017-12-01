@@ -46,7 +46,7 @@ public class PieceMessage extends Messages {
 		myPeer.peerInfoVector.get(neighborPeerIndex).bitMap.set(indexField, 1);
 
 		// Store the new piece on our client machine
-
+		myPeer.fileByteArray[message.indexField] = message.pieceContents;
 		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 7;
 		myPeer.peerInfoVector.get(neighborPeerIndex).numberPiecesReceivedFromPeer++;
 		return 1;
