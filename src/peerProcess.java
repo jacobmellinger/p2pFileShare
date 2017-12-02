@@ -115,7 +115,6 @@ public class peerProcess {
         File file = new File(path + "\\peer_" + myPeerID +"\\" + FileName);
         if(file.exists()) return;
 
-        fileByteArray = new byte[sizeOfBitMap][PieceSize];
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(path + "\\peer_"+ myPeerID +"\\" + FileName);
@@ -125,6 +124,11 @@ public class peerProcess {
             }
         } finally {
             fileOutputStream.close();
+        }
+        if(FileSize%PieceSize > 0) {
+            int extraNullBytes = PieceSize - (FileSize % PieceSize);
+            RandomAccessFile raf = new RandomAccessFile(file, "rwd");
+            raf.setLength(file.length() - extraNullBytes);
         }
     }
 

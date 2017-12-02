@@ -5,6 +5,7 @@ public class OtherPeerInfo {
     public String peerAddress;
     public int peerPort;
     public Vector<Integer> bitMap;
+    public int hasFile = 0;
 
     public boolean hasReceivedHandshake = false;
     public boolean hasReceivedBitfield = false;
@@ -29,6 +30,7 @@ public class OtherPeerInfo {
     public OtherPeerInfo(int pId, String pAddress, int pPort, int hasFile, int sizeOfBitMap) {
         this.lastMessageSentToPeer = -1;
         this.lastMessageReceivedFromPeer = -1;
+        this.hasFile = hasFile;
         peerId = pId;
         peerAddress = pAddress;
         peerPort = pPort;

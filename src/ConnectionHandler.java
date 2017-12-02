@@ -7,8 +7,9 @@ public class ConnectionHandler extends Thread{
     private peerProcess myPeer;
     private String theirPeerID;
 
-    private Messages incomingMessage;    //incomingMessage received from the client
-    private Messages outgoingMessage;    //uppercase incomingMessage send to the client
+    private String incomingMessage;    //incomingMessage received from the client
+    private byte[] incomingByteArrayMessage;
+    private String outgoingMessage;    //uppercase incomingMessage send to the client
     private Socket connection;
     private ObjectInputStream in;	//stream read from the socket
     private ObjectOutputStream out;    //stream write to the socket
@@ -133,98 +134,76 @@ public class ConnectionHandler extends Thread{
 
 
             try{
-                Handshake h = new Handshake();
-                establishConnection(h);
-                Handshake m = new Handshake();
-                Messages newIncomingMsg = new Handshake();
-                while(/*!everyoneHasEverything*/ true) {
-                    //Sending each other their respective PeerID to identify each other
-                    int myPeerIndex = -1;
-                    for (int i = 0; i < myPeer.peerInfoVector.size(); i++) {
-                        if (myPeer.peerInfoVector.get(i).peerId == myPeerID) {
-                            myPeerIndex = i;
+
+                establishConnection(Integer.toString(myPeerID));
+                int myPeerIndex = -1;
+                int otherPeerIndex = -1;
+                for (int i = 0; i < myPeer.peerInfoVector.size(); i++) {
+                    if (myPeer.peerInfoVector.get(i).peerId == myPeerID) {
+                        myPeerIndex = i;
+                    }
+                    if (myPeer.peerInfoVector.get(i).peerId == Integer.parseInt(theirPeerID)) {
+                        otherPeerIndex = i;
+                    }
+                }
+                int counter = 0;
+
+                while(/*!everyoneHasEverything*/ !isDone) {
+                    synchronized (myPeer.peerInfoVector.get(myPeerIndex)) {
+                        //Send Message
+                        if(myPeer.peerInfoVector.get(myPeerIndex).hasFile == 1 && myPeerID != 1001)
+                        {
+                            outgoingMessage = "DONE";
+                            sendMessage(outgoingMessage);
                             break;
                         }
-                    }
-
-                    //Send Message
-                    synchronized (myPeer.peerInfoVector.get(myPeerIndex)) {
-                        System.out.println("Entering sync send msg!!");
-                        if (this.theirPeerID == null) {
-                            outgoingMessage = m.createMessage(myPeerID, -1, myPeer);
-                        } else {
-                            outgoingMessage = outgoingMessage.createMessage(myPeerID, Integer.parseInt(theirPeerID), myPeer);
-                        }
-                        System.out.println("printing message type: " + outgoingMessage.getMessageType() + " and error set as: " + outgoingMessage.errorMsg);
-                        System.out.println("lastMsgReceived: " + myPeer.peerInfoVector.get(myPeerIndex).lastMessageReceivedFromPeer);
-                        System.out.println("lastMsgSent: " + myPeer.peerInfoVector.get(myPeerIndex).lastMessageSentToPeer);
-//                        if (outgoingMessage.errorMsg == false && outgoingMessage != null) {
-                            sendMessage(outgoingMessage);
-                            System.out.println("sent message");
-//                        }
-                        synchronized (myPeer.writer) {
-                            myPeer.writer.println("SENT A MESSAGE!!");
-                        }
-                        int otherPeerIndex = -1;
-                        for (int i = 0; i < myPeer.peerInfoVector.size(); i++) {
-                            if (theirPeerID != null){
-                                if (myPeer.peerInfoVector.get(i).peerId == Integer.parseInt(theirPeerID)) {
-                                    otherPeerIndex = i;
-                                    break;
+                        else if(myPeer.peerInfoVector.get(myPeerIndex).hasFile == 1)
+                        {
+                            if(myPeer.peerInfoVector.get(otherPeerIndex).hasFile == 0)
+                            {
+                                if(counter < myPeer.fileByteArray.length) {
+                                    byte[] piece = myPeer.fileByteArray[counter];
+                                    System.out.println(piece);
+                                    for (int i=0; i< piece.length; i++)
+                                    {
+                                        System.out.print(piece[i] + " ");
+                                    }
+                                    System.out.println();
+                                    sendByteArrayMessage(piece);
+                                    System.out.println("Sent piece " + counter + " to Peer" + theirPeerID);
+                                    counter++;
                                 }
+                                else break;
                             }
                         }
-                        System.out.println("a");
-                        incomingMessage = (Messages) in.readObject();
-                        System.out.println("b");
-//                        switch (incomingMessage.getMessageType())
-//                        {
-//                            case 0:
-//                                System.out.println("case 0");
-//                                newIncomingMsg = (ChokeMessage) incomingMessage;
-//                                break;
-//                            case 1:
-//                                System.out.println("case 1");
-//                                newIncomingMsg = (UnchokeMessage) incomingMessage;
-//                                break;
-//                            case 2:
-//                                System.out.println("case 2");
-//                                newIncomingMsg = (InterestedMessage) incomingMessage;
-//                                break;
-//                            case 3:
-//                                System.out.println("case 3");
-//                                newIncomingMsg = (NotInterestedMessage) incomingMessage;
-//                                break;
-//                            case 4:
-//                                System.out.println("case 4");
-//                                newIncomingMsg = (HaveMessage) incomingMessage;
-//                                break;
-//                            case 5:
-//                                System.out.println("case 5");
-//                                newIncomingMsg = (BitfieldMessage) incomingMessage;
-//                                break;
-//                            case 6:
-//                                System.out.println("case 6");
-//                                newIncomingMsg = (RequestMessage) incomingMessage;
-//                                break;
-//                            case 7:
-//                                System.out.println("case 7");
-//                                newIncomingMsg = (PieceMessage) incomingMessage;
-//                                break;
-//                            case 8:
-//                                newIncomingMsg = (Handshake) incomingMessage;
-//                                break;
-//                            default: System.out.println("Something bad happned!");
-//                        }
-
-                        System.out.println("c");
-                        synchronized (myPeer.writer) {
-                            incomingMessage.handleMessage(newIncomingMsg, myPeer, otherPeerIndex, myPeer.writer);
+                        else {
+                            outgoingMessage = "testMsg";
+                            sendMessage(outgoingMessage);
                         }
 
-                        //writer.println("[" + myPeerID + "] Receive incomingMessage: " + incomingMessage + " from " + theirPeerID);
-                        System.out.println("end of sync block ");
                     }
+
+                    if(myPeer.peerInfoVector.get(myPeerIndex).hasFile == 0) {
+                        if(counter < myPeer.fileByteArray.length) {
+                            incomingByteArrayMessage = (byte[]) in.readObject();
+                            System.out.println(incomingByteArrayMessage);
+                            for (int i=0; i< incomingByteArrayMessage.length; i++)
+                            {
+                                System.out.print(incomingByteArrayMessage[i] + " ");
+                            }
+                            myPeer.fileByteArray[counter] = incomingByteArrayMessage;
+                            myPeer.peerInfoVector.get(myPeerIndex).bitMap.set(counter, 1);
+                            System.out.println("\nReceived piece " + counter + " from Peer" + theirPeerID);
+                            counter++;
+                        }
+                        else break;
+                    }
+                    else{
+                        incomingMessage = (String) in.readObject();
+                        if (incomingMessage.equals("DONE")) break;
+                    }
+
+
                     isDone = true;
                     System.out.println("checking that its done ");
                     for(int i=0; i<myPeer.peerInfoVector.get(myPeerIndex).bitMap.size(); i++){
@@ -240,17 +219,10 @@ public class ConnectionHandler extends Thread{
                         synchronized (myPeer.fileByteArray)
                         {
                             myPeer.createFileFromByteArray(myPeer.sizeOfBitMap);
-                            System.out.println("Entering sync send msg!!");
-                            synchronized ("Peer " + myPeer.myPeerID + " had downloaded the complete file.") {
-                                myPeer.writer.println("[" + System.currentTimeMillis() + "]: Peer " + myPeer.myPeerID + " had downloaded the complete file.");
-                            }
-                            break;
+                            myPeer.peerInfoVector.get(otherPeerIndex).hasFile = 1;
+                            System.out.println("Peer " + myPeer.myPeerID + " had downloaded the complete file.");
                         }
                     }
-//                    else{
-//                        System.out.println("its not done :(");
-//
-//                    }
                 }
             }
             catch(ClassNotFoundException classnot){
@@ -266,7 +238,7 @@ public class ConnectionHandler extends Thread{
                 in.close();
                 out.close();
                 connection.close();
-
+                System.out.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
             }
             catch(IOException ioException){
                 System.out.println("[" + myPeerID + "] Disconnect with " + theirPeerID);
@@ -276,7 +248,19 @@ public class ConnectionHandler extends Thread{
 
 
     //send a incomingMessage to the output stream
-    public void sendMessage(Messages msg)
+    public void sendMessage(String msg)
+    {
+        try{
+            out.writeObject(msg);
+            out.flush();
+            System.out.println("[" + myPeerID + "] Send incomingMessage: " + msg + " to " + theirPeerID);
+        }
+        catch(IOException ioException){
+            ioException.printStackTrace();
+        }
+    }
+
+    public void sendByteArrayMessage(byte[] msg)
     {
         try{
             out.writeObject(msg);
@@ -289,28 +273,25 @@ public class ConnectionHandler extends Thread{
     }
 
     //establish connection (replace with Handshake)
-    public void establishConnection(Messages msg)
+    public void establishConnection(String msg)
     {
         try{
-            System.out.println("[" + Integer.toString(myPeer.myPeerID) + "] Creating a connection to new peer...");
+            System.out.println("[" + myPeerID + "] Creating a connection to new peer...");
             //Sending your PeerID to the other Peer being connected to
             out.writeObject(msg);
             out.flush();
             try {
                 //Receiving from Peer that is being connected, their PeerID
-                incomingMessage = (Messages) in.readObject();
+                incomingMessage = (String)in.readObject();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            //incomingMessage
-            System.out.println(" Peer " + myPeerID + " makes a connection to Peer " + theirPeerID);
-            synchronized (myPeer.writer) {
-                myPeer.writer.println("[" + System.currentTimeMillis() + "]: Peer " + myPeerID + " makes a connection to Peer " + theirPeerID);
-            }
-            //writer.println("[" + myPeerID + "] Successful connection to " + theirPeerID + "!!!");
+            theirPeerID = incomingMessage;
+            System.out.println("[" + myPeerID + "] Successful connection to " + theirPeerID + "!!!");
         }
         catch(IOException ioException){
             ioException.printStackTrace();
         }
     }
+
 }
