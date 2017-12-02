@@ -1,3 +1,5 @@
+import java.io.PrintWriter;
+
 public class RequestMessage extends Messages {
 
 	private int messageType;
@@ -36,7 +38,7 @@ public class RequestMessage extends Messages {
 	}
 
 	@Override
-	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex, PrintWriter writer) {
 		RequestMessage message = (RequestMessage) msg;
 
 		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 6;

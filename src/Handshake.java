@@ -1,3 +1,5 @@
+import java.io.PrintWriter;
+
 public class Handshake extends Messages {
 	
 	String handshakeHeader;
@@ -22,7 +24,7 @@ public class Handshake extends Messages {
 	}
 
 	@Override
-	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex, PrintWriter writer) {
 		Handshake message = (Handshake) msg;
 
 		if (message.handshakeHeader == "P2PFILESHARINGPROJ") {

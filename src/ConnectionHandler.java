@@ -156,7 +156,7 @@ public class ConnectionHandler extends Thread{
                         }
 
                         incomingMessage = (Messages) in.readObject();
-                        incomingMessage.handleMessage(incomingMessage, myPeer, otherPeerIndex);
+                        incomingMessage.handleMessage(incomingMessage, myPeer, otherPeerIndex)
                         //writer.println("[" + myPeerID + "] Receive incomingMessage: " + incomingMessage + " from " + theirPeerID);
                         System.out.println("stuff happening");
                     }

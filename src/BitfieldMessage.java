@@ -1,3 +1,4 @@
+import java.io.PrintWriter;
 import java.util.Vector;
 
 public class BitfieldMessage extends Messages {
@@ -41,7 +42,7 @@ public class BitfieldMessage extends Messages {
 	}
 
 	@Override
-	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex, PrintWriter writer) {
 		BitfieldMessage message = (BitfieldMessage) msg;
 
 		// All we need to do is update our knowledge of their bitMap
