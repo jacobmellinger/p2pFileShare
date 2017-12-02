@@ -1,3 +1,5 @@
+import java.io.PrintWriter;
+
 // This message Class encapsulates messages for Choke
 public class ChokeMessage extends Messages {
 
@@ -23,11 +25,13 @@ public class ChokeMessage extends Messages {
 	}
 
 	@Override
-	public int handleMessage(Messages msg, peerProcess myPeer, int myPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex, PrintWriter writer) {
 		ChokeMessage message = (ChokeMessage) msg;
 
-		myPeer.peerInfoVector.get(myPeerIndex).themChokingMe = true;
-		myPeer.peerInfoVector.get(myPeerIndex).lastMessageReceivedFromPeer = 0;
+		myPeer.peerInfoVector.get(neighborPeerIndex).themChokingMe = true;
+		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 0;
+		writer.println("[" + System.currentTimeMillis() + "]: Peer " + myPeer.myPeerID + " is choked by " + myPeer.peerInfoVector.get(neighborPeerIndex).peerId);
+
 		return 1;
 	}
 }

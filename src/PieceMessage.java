@@ -1,3 +1,5 @@
+import java.io.PrintWriter;
+
 public class PieceMessage extends Messages {
 
 	private int messageType;
@@ -37,7 +39,7 @@ public class PieceMessage extends Messages {
 	}
 
 	@Override
-	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex, PrintWriter writer) {
 		PieceMessage message = (PieceMessage) msg;
 
 		int pieceIndex = message.indexField;
@@ -49,6 +51,24 @@ public class PieceMessage extends Messages {
 		myPeer.fileByteArray[message.indexField] = message.pieceContents;
 		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 7;
 		myPeer.peerInfoVector.get(neighborPeerIndex).numberPiecesReceivedFromPeer++;
+		writer.println("[" + System.currentTimeMillis() + "]: Peer " + myPeer.myPeerID + " has downloaded the piece " + message.indexField + " from " + myPeer.peerInfoVector.get(neighborPeerIndex).peerId);
+
+		int myIndex = -1;
+		for (int i = 0; i < myPeer.peerInfoVector.size(); i++) {
+			if (myPeer.peerInfoVector.get(i).peerId == myPeer.myPeerID) {
+				myIndex = i;
+			}
+		}
+		int counter = 0;
+		if (myIndex != -1) {
+			for (int i = 0; i < myPeer.peerInfoVector.get(myIndex).bitMap.size(); i++) {
+				if (myPeer.peerInfoVector.get(myIndex).bitMap.get(i) == 1) {
+					counter++;
+				}
+			}
+		}
+
+		writer.println("Now the number of pieces it has is " + counter);
 		return 1;
 	}
 }

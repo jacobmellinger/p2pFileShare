@@ -1,3 +1,5 @@
+import java.io.PrintWriter;
+
 public class HaveMessage extends Messages {
 
 	private int messageType;
@@ -29,7 +31,7 @@ public class HaveMessage extends Messages {
 	}
 
 	@Override
-	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex, PrintWriter writer) {
 		HaveMessage message = (HaveMessage) msg;
 
 		// Update our representation of their bitMap with the peice they just said they have.
@@ -37,6 +39,7 @@ public class HaveMessage extends Messages {
 
 		myPeer.peerInfoVector.get(neighborPeerIndex).hasReceivedHaveMessage = true;
 		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 4;
+		writer.println("[" + System.currentTimeMillis() + "]: Peer " + myPeer.myPeerID + " received the 'have' message from " + myPeer.peerInfoVector.get(neighborPeerIndex).peerId + " for the piece " + message.messagePayload);
 		return 1;
 	}
 

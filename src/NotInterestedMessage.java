@@ -1,3 +1,5 @@
+import java.io.PrintWriter;
+
 public class NotInterestedMessage extends Messages {
 
 	private int messageLength;
@@ -22,11 +24,13 @@ public class NotInterestedMessage extends Messages {
 	}
 
 	@Override
-	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex) {
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex, PrintWriter writer) {
 		NotInterestedMessage message = (NotInterestedMessage) msg;
 
 		myPeer.peerInfoVector.get(neighborPeerIndex).isInterested = false;
 		myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 3;
+		writer.println("[" + System.currentTimeMillis() + "]: Peer " + myPeer.myPeerID + " received the 'not interested' message from " + myPeer.peerInfoVector.get(neighborPeerIndex).peerId);
+
 		return 1;
 	}
 

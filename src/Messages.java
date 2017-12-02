@@ -1,6 +1,7 @@
 //package messages;
 
 
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -9,7 +10,7 @@ public abstract class Messages implements Serializable {
 	int messageType;
 	public boolean errorMsg = false;
 	public abstract int getMessageType();
-	public abstract int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex);
+	public abstract int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex, PrintWriter writer);
 
 	public Messages createMessage(int myPeerID, int otherPeerID, peerProcess myPeer) {
 
