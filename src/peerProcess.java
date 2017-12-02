@@ -25,7 +25,7 @@ public class peerProcess {
     public byte[][] fileByteArray = null;
     public String path = System.getProperty("user.dir");
     public int sizeOfBitMap = 0;
-    public 
+    public
 
     peerProcess(int myPeerID){
         this.myPeerID = myPeerID;

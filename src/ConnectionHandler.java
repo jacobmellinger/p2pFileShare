@@ -158,9 +158,10 @@ public class ConnectionHandler extends Thread{
                         incomingMessage = (Messages) in.readObject();
                         incomingMessage.handleMessage(incomingMessage, myPeer, otherPeerIndex);
                         //writer.println("[" + myPeerID + "] Receive incomingMessage: " + incomingMessage + " from " + theirPeerID);
-
+                        System.out.println("stuff happening");
                     }
                     isDone = true;
+                    System.out.println("checking that its done ");
                     for(int i=0; i<myPeer.peerInfoVector.get(myPeerIndex).bitMap.size(); i++){
                         if(myPeer.peerInfoVector.get(myPeerIndex).bitMap.get(i) == 0)
                         {
@@ -170,9 +171,11 @@ public class ConnectionHandler extends Thread{
                     }
                     if(isDone)
                     {
+                        System.out.println("its done!! ");
                         synchronized (myPeer.fileByteArray)
                         {
                             myPeer.createFileFromByteArray(myPeer.sizeOfBitMap);
+                            break;
                         }
                     }
                 }
