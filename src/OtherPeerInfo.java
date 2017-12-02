@@ -27,6 +27,8 @@ public class OtherPeerInfo {
     }
 
     public OtherPeerInfo(int pId, String pAddress, int pPort, int hasFile, int sizeOfBitMap) {
+        this.lastMessageSentToPeer = -1;
+        this.lastMessageReceivedFromPeer = -1;
         peerId = pId;
         peerAddress = pAddress;
         peerPort = pPort;
@@ -38,5 +40,6 @@ public class OtherPeerInfo {
                 bitMap.addElement(0);
             }
         }
+        this.bitMap = bitMap;
     }
 }

@@ -27,10 +27,17 @@ public class Handshake extends Messages {
 	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex, PrintWriter writer) {
 		Handshake message = (Handshake) msg;
 
-		if (message.handshakeHeader == "P2PFILESHARINGPROJ") {
-			myPeer.peerInfoVector.get(neighborPeerIndex).hasReceivedHandshake = true;
-			myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 8;
-			return message.peerID;
+		if(message.errorMsg == false){
+
+			if (message.handshakeHeader == "P2PFILESHARINGPROJ") {
+				myPeer.peerInfoVector.get(neighborPeerIndex).hasReceivedHandshake = true;
+				myPeer.peerInfoVector.get(neighborPeerIndex).lastMessageReceivedFromPeer = 8;
+				System.out.println("I got handshake from " + message.peerID);
+				return message.peerID;
+			}
+			else {
+				return -1;
+			}
 		}
 		else {
 			return -1;

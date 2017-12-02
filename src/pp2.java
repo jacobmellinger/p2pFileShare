@@ -25,8 +25,9 @@ public class pp2 {
     public byte[][] fileByteArray = null;
     public String path = System.getProperty("user.dir");
     public int sizeOfBitMap = 0;
+    public PrintWriter writer = new PrintWriter("log_peer_" + myPeerID + ".log", "UTF-8");
 
-    pp2(int myPeerID){
+    pp2(int myPeerID) throws FileNotFoundException, UnsupportedEncodingException {
         this.myPeerID = myPeerID;
     }
 
@@ -131,6 +132,8 @@ public class pp2 {
 //        peerProcess myPeerProcess = new peerProcess(Integer.parseInt(args[0]));
         peerProcess myPeerProcess = new peerProcess(1002); //USE THIS FOR TESTING IN IDE
 
+        myPeerProcess.writer.println("CREATING A LOG FILE!!");
+
         myPeerProcess.getCommonConfiguration();
 
         myPeerProcess.sizeOfBitMap = myPeerProcess.FileSize/ myPeerProcess.PieceSize;
@@ -138,7 +141,6 @@ public class pp2 {
 
         myPeerProcess.getPeerConfiguration(myPeerProcess.sizeOfBitMap);
         myPeerProcess.fileByteArray = new byte[myPeerProcess.sizeOfBitMap][myPeerProcess.PieceSize];
-
         try {
             myPeerProcess.createByteArrayFromFile(myPeerProcess.sizeOfBitMap);
         } catch (Exception e) {
@@ -180,7 +182,6 @@ public class pp2 {
                     while (true) {
 //                        new ConnectionHandler(listener.accept(), peerID, peer).startTimedConnection();
                         new ConnectionHandler(listener.accept(), peerID, peer).start();
-
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

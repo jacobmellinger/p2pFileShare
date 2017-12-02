@@ -25,9 +25,9 @@ public class peerProcess {
     public byte[][] fileByteArray = null;
     public String path = System.getProperty("user.dir");
     public int sizeOfBitMap = 0;
-    public
+    public PrintWriter writer = new PrintWriter("log_peer_" + myPeerID + ".log", "UTF-8");
 
-    peerProcess(int myPeerID){
+    peerProcess(int myPeerID) throws FileNotFoundException, UnsupportedEncodingException {
         this.myPeerID = myPeerID;
     }
 
@@ -131,6 +131,8 @@ public class peerProcess {
     public static void main(String [] args) throws IOException {
 //        peerProcess myPeerProcess = new peerProcess(Integer.parseInt(args[0]));
         peerProcess myPeerProcess = new peerProcess(1001); //USE THIS FOR TESTING IN IDE
+
+        myPeerProcess.writer.println("CREATING A LOG FILE!!");
 
         myPeerProcess.getCommonConfiguration();
 

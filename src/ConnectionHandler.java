@@ -12,7 +12,7 @@ public class ConnectionHandler extends Thread{
     private Socket connection;
     private ObjectInputStream in;	//stream read from the socket
     private ObjectOutputStream out;    //stream write to the socket
-    public PrintWriter writer;
+
 
     public ConnectionHandler(Socket connection, String myPeerID, peerProcess myPeer) throws FileNotFoundException, UnsupportedEncodingException {
         this.myPeer = myPeer;
@@ -20,7 +20,6 @@ public class ConnectionHandler extends Thread{
         this.myPeerID = Integer.parseInt(myPeerID);
         this.theirPeerID = null;
         //this.writer = new PrintWriter(myPeerID +"_log.txt", "UTF-8");
-        this.writer = new PrintWriter("log_peer_" + myPeerID + ".log", "UTF-8");
     }
 
     public void getCurrentTime() {
@@ -32,7 +31,7 @@ public class ConnectionHandler extends Thread{
         int minute = now.getMinute();
         int second = now.getSecond();
         //int millis = now.get(ChronoField.MILLI_OF_SECOND); // Note: no direct getter available.
-        writer.printf("%d-%02d-%02d %02d:%02d:%02d.%03d", year, month, day, hour, minute, second);
+        myPeer.writer.printf("%d-%02d-%02d %02d:%02d:%02d.%03d", year, month, day, hour, minute, second);
     }
 
 //    public  void startTimedConnection() {
@@ -129,17 +128,17 @@ public class ConnectionHandler extends Thread{
             //String workingDir = System.getProperty("user.dir");
             //FileHandler log = new FileHandler(workingDir + "/" + myPeerID +".log");
             //PrintWriter writer = new PrintWriter(myPeerID +"_log.txt", "UTF-8");
-           // writer.println("CREATING A LOG FILE!!");
            // writer.close();
             boolean isDone = false;
 
 
             try{
+                Handshake h = new Handshake();
+                establishConnection(h);
+                Handshake m = new Handshake();
+                Messages newIncomingMsg = new Handshake();
                 while(/*!everyoneHasEverything*/ true) {
                     //Sending each other their respective PeerID to identify each other
-                    //establishConnection(myPeerID);
-                    Handshake m = new Handshake();
-
                     int myPeerIndex = -1;
                     for (int i = 0; i < myPeer.peerInfoVector.size(); i++) {
                         if (myPeer.peerInfoVector.get(i).peerId == myPeerID) {
@@ -150,15 +149,22 @@ public class ConnectionHandler extends Thread{
 
                     //Send Message
                     synchronized (myPeer.peerInfoVector.get(myPeerIndex)) {
+                        System.out.println("Entering sync send msg!!");
                         if (this.theirPeerID == null) {
                             outgoingMessage = m.createMessage(myPeerID, -1, myPeer);
                         } else {
-                            outgoingMessage = m.createMessage(myPeerID, Integer.parseInt(theirPeerID), myPeer);
+                            outgoingMessage = outgoingMessage.createMessage(myPeerID, Integer.parseInt(theirPeerID), myPeer);
                         }
-                        if (outgoingMessage.errorMsg == false && outgoingMessage != null) {
+                        System.out.println("printing message type: " + outgoingMessage.getMessageType() + " and error set as: " + outgoingMessage.errorMsg);
+                        System.out.println("lastMsgReceived: " + myPeer.peerInfoVector.get(myPeerIndex).lastMessageReceivedFromPeer);
+                        System.out.println("lastMsgSent: " + myPeer.peerInfoVector.get(myPeerIndex).lastMessageSentToPeer);
+//                        if (outgoingMessage.errorMsg == false && outgoingMessage != null) {
                             sendMessage(outgoingMessage);
+                            System.out.println("sent message");
+//                        }
+                        synchronized (myPeer.writer) {
+                            myPeer.writer.println("SENT A MESSAGE!!");
                         }
-
                         int otherPeerIndex = -1;
                         for (int i = 0; i < myPeer.peerInfoVector.size(); i++) {
                             if (theirPeerID != null){
@@ -168,16 +174,61 @@ public class ConnectionHandler extends Thread{
                                 }
                             }
                         }
-
+                        System.out.println("a");
                         incomingMessage = (Messages) in.readObject();
-                        incomingMessage.handleMessage(incomingMessage, myPeer, otherPeerIndex, writer);
+                        System.out.println("b");
+//                        switch (incomingMessage.getMessageType())
+//                        {
+//                            case 0:
+//                                System.out.println("case 0");
+//                                newIncomingMsg = (ChokeMessage) incomingMessage;
+//                                break;
+//                            case 1:
+//                                System.out.println("case 1");
+//                                newIncomingMsg = (UnchokeMessage) incomingMessage;
+//                                break;
+//                            case 2:
+//                                System.out.println("case 2");
+//                                newIncomingMsg = (InterestedMessage) incomingMessage;
+//                                break;
+//                            case 3:
+//                                System.out.println("case 3");
+//                                newIncomingMsg = (NotInterestedMessage) incomingMessage;
+//                                break;
+//                            case 4:
+//                                System.out.println("case 4");
+//                                newIncomingMsg = (HaveMessage) incomingMessage;
+//                                break;
+//                            case 5:
+//                                System.out.println("case 5");
+//                                newIncomingMsg = (BitfieldMessage) incomingMessage;
+//                                break;
+//                            case 6:
+//                                System.out.println("case 6");
+//                                newIncomingMsg = (RequestMessage) incomingMessage;
+//                                break;
+//                            case 7:
+//                                System.out.println("case 7");
+//                                newIncomingMsg = (PieceMessage) incomingMessage;
+//                                break;
+//                            case 8:
+//                                newIncomingMsg = (Handshake) incomingMessage;
+//                                break;
+//                            default: System.out.println("Something bad happned!");
+//                        }
+
+                        System.out.println("c");
+                        synchronized (myPeer.writer) {
+                            incomingMessage.handleMessage(newIncomingMsg, myPeer, otherPeerIndex, myPeer.writer);
+                        }
+
                         //writer.println("[" + myPeerID + "] Receive incomingMessage: " + incomingMessage + " from " + theirPeerID);
-                        System.out.println("stuff happening");
+                        System.out.println("end of sync block ");
                     }
                     isDone = true;
                     System.out.println("checking that its done ");
                     for(int i=0; i<myPeer.peerInfoVector.get(myPeerIndex).bitMap.size(); i++){
-                        if(myPeer.peerInfoVector.get(myPeerIndex).bitMap.get(i) == 0)
+                        if(myPeer.peerInfoVector.get(myPeerIndex).bitMap.get(i) == 0 || myPeerID == 1001)
                         {
                             isDone = false;
                             break;
@@ -189,10 +240,17 @@ public class ConnectionHandler extends Thread{
                         synchronized (myPeer.fileByteArray)
                         {
                             myPeer.createFileFromByteArray(myPeer.sizeOfBitMap);
-                            writer.println("[" + System.currentTimeMillis() + "]: Peer " + myPeer.myPeerID + " had downloaded the complete file.");
+                            System.out.println("Entering sync send msg!!");
+                            synchronized ("Peer " + myPeer.myPeerID + " had downloaded the complete file.") {
+                                myPeer.writer.println("[" + System.currentTimeMillis() + "]: Peer " + myPeer.myPeerID + " had downloaded the complete file.");
+                            }
                             break;
                         }
                     }
+//                    else{
+//                        System.out.println("its not done :(");
+//
+//                    }
                 }
             }
             catch(ClassNotFoundException classnot){
@@ -216,6 +274,7 @@ public class ConnectionHandler extends Thread{
         }
     }
 
+
     //send a incomingMessage to the output stream
     public void sendMessage(Messages msg)
     {
@@ -230,7 +289,7 @@ public class ConnectionHandler extends Thread{
     }
 
     //establish connection (replace with Handshake)
-    public void establishConnection(String msg)
+    public void establishConnection(Messages msg)
     {
         try{
             System.out.println("[" + Integer.toString(myPeer.myPeerID) + "] Creating a connection to new peer...");
@@ -244,7 +303,10 @@ public class ConnectionHandler extends Thread{
                 e.printStackTrace();
             }
             //incomingMessage
-            writer.println("[" + System.currentTimeMillis() + "]: Peer " + myPeerID + " makes a connection to Peer " + theirPeerID);
+            System.out.println(" Peer " + myPeerID + " makes a connection to Peer " + theirPeerID);
+            synchronized (myPeer.writer) {
+                myPeer.writer.println("[" + System.currentTimeMillis() + "]: Peer " + myPeerID + " makes a connection to Peer " + theirPeerID);
+            }
             //writer.println("[" + myPeerID + "] Successful connection to " + theirPeerID + "!!!");
         }
         catch(IOException ioException){

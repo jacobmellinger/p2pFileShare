@@ -10,7 +10,52 @@ public abstract class Messages implements Serializable {
 	int messageType;
 	public boolean errorMsg = false;
 	public abstract int getMessageType();
-	public abstract int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex, PrintWriter writer);
+	//public abstract int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex, PrintWriter writer);
+
+	public int handleMessage(Messages msg, peerProcess myPeer, int neighborPeerIndex, PrintWriter writer) {
+		Messages newMsg;
+		switch (msg.getMessageType())
+		{
+			case 0:
+				System.out.println("case 0");
+				newMsg = (ChokeMessage) msg;
+				break;
+			case 1:
+				System.out.println("case 1");
+				newMsg = (UnchokeMessage) msg;
+				break;
+			case 2:
+				System.out.println("case 2");
+				newMsg = (InterestedMessage) msg;
+				break;
+			case 3:
+				System.out.println("case 3");
+				newMsg = (NotInterestedMessage) msg;
+				break;
+			case 4:
+				System.out.println("case 4");
+				newMsg = (HaveMessage) msg;
+				break;
+			case 5:
+				System.out.println("case 5");
+				newMsg = (BitfieldMessage) msg;
+				break;
+			case 6:
+				System.out.println("case 6");
+				newMsg = (RequestMessage) msg;
+				break;
+			case 7:
+				System.out.println("case 7");
+				newMsg = (PieceMessage) msg;
+				break;
+			case 8:
+				newMsg = (Handshake) msg;
+				break;
+			default: System.out.println("Something bad happned!");
+		}
+		return 1;
+	}
+
 
 	public Messages createMessage(int myPeerID, int otherPeerID, peerProcess myPeer) {
 
@@ -29,6 +74,12 @@ public abstract class Messages implements Serializable {
 		}
 		// should check to make sure the peerIndex's were initialized in the loop
 
+		if(otherPeerIndex == -1)
+		{
+			Handshake newMessage = new Handshake(myPeerID);
+			myPeer.peerInfoVector.get(otherPeerIndex).lastMessageSentToPeer = 8;
+			return newMessage;
+		}
 
 		// Haven't sent a Handshake? -> send one
 		if (myPeer.peerInfoVector.get(otherPeerIndex).lastMessageSentToPeer == -1) {
