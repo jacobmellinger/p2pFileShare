@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.Socket;
+import java.time.LocalDateTime;
 
 public class ConnectionHandler extends Thread{
     private int myPeerID;
@@ -11,14 +12,27 @@ public class ConnectionHandler extends Thread{
     private Socket connection;
     private ObjectInputStream in;	//stream read from the socket
     private ObjectOutputStream out;    //stream write to the socket
-    private PrintWriter writer;
+    public PrintWriter writer;
 
     public ConnectionHandler(Socket connection, String myPeerID, peerProcess myPeer) throws FileNotFoundException, UnsupportedEncodingException {
         this.myPeer = myPeer;
         this.connection = connection;
         this.myPeerID = Integer.parseInt(myPeerID);
         this.theirPeerID = null;
-        this.writer = new PrintWriter(myPeerID +"_log.txt", "UTF-8");
+        //this.writer = new PrintWriter(myPeerID +"_log.txt", "UTF-8");
+        this.writer = new PrintWriter("log_peer_" + myPeerID + ".log", "UTF-8");
+    }
+
+    public void getCurrentTime() {
+        LocalDateTime now = LocalDateTime.now();
+        int year = now.getYear();
+        int month = now.getMonthValue();
+        int day = now.getDayOfMonth();
+        int hour = now.getHour();
+        int minute = now.getMinute();
+        int second = now.getSecond();
+        //int millis = now.get(ChronoField.MILLI_OF_SECOND); // Note: no direct getter available.
+        writer.printf("%d-%02d-%02d %02d:%02d:%02d.%03d", year, month, day, hour, minute, second);
     }
 
 //    public  void startTimedConnection() {
@@ -115,8 +129,8 @@ public class ConnectionHandler extends Thread{
             //String workingDir = System.getProperty("user.dir");
             //FileHandler log = new FileHandler(workingDir + "/" + myPeerID +".log");
             //PrintWriter writer = new PrintWriter(myPeerID +"_log.txt", "UTF-8");
-            writer.println("CREATING A LOG FILE!!");
-            writer.close();
+           // writer.println("CREATING A LOG FILE!!");
+           // writer.close();
             boolean isDone = false;
 
 
@@ -156,7 +170,7 @@ public class ConnectionHandler extends Thread{
                         }
 
                         incomingMessage = (Messages) in.readObject();
-                        incomingMessage.handleMessage(incomingMessage, myPeer, otherPeerIndex)
+                        incomingMessage.handleMessage(incomingMessage, myPeer, otherPeerIndex, writer);
                         //writer.println("[" + myPeerID + "] Receive incomingMessage: " + incomingMessage + " from " + theirPeerID);
                         System.out.println("stuff happening");
                     }
@@ -175,6 +189,7 @@ public class ConnectionHandler extends Thread{
                         synchronized (myPeer.fileByteArray)
                         {
                             myPeer.createFileFromByteArray(myPeer.sizeOfBitMap);
+                            writer.println("[" + System.currentTimeMillis() + "]: Peer " + myPeer.myPeerID + " had downloaded the complete file.");
                             break;
                         }
                     }
@@ -229,7 +244,8 @@ public class ConnectionHandler extends Thread{
                 e.printStackTrace();
             }
             //incomingMessage
-            writer.println("[" + myPeerID + "] Successful connection to " + theirPeerID + "!!!");
+            writer.println("[" + System.currentTimeMillis() + "]: Peer " + myPeerID + " makes a connection to Peer " + theirPeerID);
+            //writer.println("[" + myPeerID + "] Successful connection to " + theirPeerID + "!!!");
         }
         catch(IOException ioException){
             ioException.printStackTrace();
